@@ -1,5 +1,7 @@
 package com.krawen.movieservice.external.mapper;
 
+import java.util.Objects;
+
 import org.modelmapper.ModelMapper;
 
 import com.krawen.movieservice.entity.MovieDetail;
@@ -17,8 +19,10 @@ public class ExternalMovieServiceMapper {
     public MovieDetailDTO mapToMovieDetailDTO(MovieDetail movie) {
     	 ModelMapper modelMapper = new ModelMapper();
     	 MovieDetailDTO MovieDetailDTO = modelMapper.map(movie, MovieDetailDTO.class);
-    	 MovieDetailDTO.getBelongsToCollection().setBackdropPath(imagePath.concat(MovieDetailDTO.getBelongsToCollection().getBackdropPath()));
-    	 MovieDetailDTO.getBelongsToCollection().setPosterPath(imagePath.concat(MovieDetailDTO.getBelongsToCollection().getPosterPath()));
+    	 if(Objects.nonNull(MovieDetailDTO.getBelongsToCollection())) {
+    		 MovieDetailDTO.getBelongsToCollection().setBackdropPath(imagePath.concat(MovieDetailDTO.getBelongsToCollection().getBackdropPath()));
+        	 MovieDetailDTO.getBelongsToCollection().setPosterPath(imagePath.concat(MovieDetailDTO.getBelongsToCollection().getPosterPath()));
+    	 }
     	 MovieDetailDTO.setBackdropPath(imagePath.concat(movie.getBackdropPath()));
     	 MovieDetailDTO.setPosterPath(imagePath.concat(movie.getPosterPath()));
     	 return MovieDetailDTO;

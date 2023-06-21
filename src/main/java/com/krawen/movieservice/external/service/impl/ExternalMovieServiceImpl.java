@@ -40,13 +40,13 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	}
 
 	@Override
-	public MovieDetailDTO retrieveMovie(String movieName) {
+	public MovieDetailDTO retrieveMovieById(int movieId) {
 		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 		
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-	    ResponseEntity<MovieDetail> response = restTemplate.exchange("https://api.themoviedb.org/3/movie/11", HttpMethod.GET, entity, MovieDetail.class);
+	    ResponseEntity<MovieDetail> response = restTemplate.exchange("https://api.themoviedb.org/3/movie/"+movieId, HttpMethod.GET, entity, MovieDetail.class);
 	    MovieDetailDTO movie = extMovieServiceMapper.mapToMovieDetailDTO(response.getBody());
 		return movie;
 	}

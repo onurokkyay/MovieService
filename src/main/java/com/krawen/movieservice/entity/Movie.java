@@ -12,7 +12,7 @@ public class Movie {
     @JsonProperty("backdrop_path")
     private String backdropPath;
     @JsonProperty("genre_ids") 
-    private long[] genreIDS;
+    private long[] genreIdList;
     private Long id;
     @JsonProperty("original_language")
     private String originalLanguage;

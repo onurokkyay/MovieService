@@ -8,7 +8,7 @@ import lombok.Data;
 public class MovieDTO {
     private Boolean adult;
     private String backdropPath;
-    private long[] genreIDS;
+    private long[] genreIdList;
     private Long id;
     private String originalLanguage;
     private String originalTitle;

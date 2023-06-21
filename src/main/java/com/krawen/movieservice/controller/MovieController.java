@@ -2,6 +2,7 @@ package com.krawen.movieservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +17,9 @@ public class MovieController {
 	@Autowired
 	IMovieService movieService;
 
-	@GetMapping("/movieservice/movie")
-	public MovieDetailDTO retrieveMovie() {
-		return movieService.retrieveMovie("scarface");
+	@GetMapping("/movieservice/movie/{movieId}")
+	public MovieDetailDTO retrieveMovieById(@PathVariable int movieId) {
+		return movieService.retrieveMovieById(movieId);
 	}
 	
 	@GetMapping("/movieservice/search/movie")

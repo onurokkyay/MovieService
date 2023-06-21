@@ -16,8 +16,8 @@ public class MovieServiceImpl implements IMovieService {
 	IExternalMovieService extMovieService;
 
 	@Override
-	public MovieDetailDTO retrieveMovie(String movieName) {
-		return extMovieService.retrieveMovie(movieName);
+	public MovieDetailDTO retrieveMovieById(int movieId) {
+		return extMovieService.retrieveMovieById(movieId);
 	}
 
 	@Override

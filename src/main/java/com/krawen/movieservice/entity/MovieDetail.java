@@ -17,8 +17,8 @@ public class MovieDetail {
 	private Genre[] genres;
 	private String homepage;
 	private Long id;
-	@JsonProperty("imdb_ID")
-	private String imdbID;
+	@JsonProperty("imdb_id")
+	private String imdbId;
 	@JsonProperty("original_language")
 	private String originalLanguage;
 	@JsonProperty("original_title")

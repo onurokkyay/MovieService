@@ -13,7 +13,7 @@ public class MovieDetailDTO {
 	private Genre[] genres;
 	private String homepage;
 	private Long id;
-	private String imdbID;
+	private String imdbId;
 	private String originalLanguage;
 	private String originalTitle;
 	private String overview;
