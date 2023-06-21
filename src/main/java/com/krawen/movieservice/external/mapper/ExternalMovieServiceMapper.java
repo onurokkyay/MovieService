@@ -1,14 +1,11 @@
 package com.krawen.movieservice.external.mapper;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 
-import com.krawen.movieservice.entity.Movie;
-import com.krawen.movieservice.entity.MovieDTO;
 import com.krawen.movieservice.entity.MovieDetail;
 import com.krawen.movieservice.entity.MovieDetailDTO;
-import com.krawen.movieservice.entity.SearchMovieByNameResponseDTO;
-import com.krawen.movieservice.external.service.SearchMovieByNameResponse;
+import com.krawen.movieservice.entity.SearchMovieResponseDTO;
+import com.krawen.movieservice.external.service.SearchMovieResponse;
 
 public class ExternalMovieServiceMapper {
 	
@@ -27,12 +24,9 @@ public class ExternalMovieServiceMapper {
     	 return MovieDetailDTO;
     }
 
-	public SearchMovieByNameResponseDTO mapToSearchMovieByNameResponseDTO(SearchMovieByNameResponse response) {
+	public SearchMovieResponseDTO mapToSearchMovieByNameResponseDTO(SearchMovieResponse response) {
 		ModelMapper modelMapper = new ModelMapper();
-
-	    TypeMap<SearchMovieByNameResponse, SearchMovieByNameResponseDTO> propertyMapper = modelMapper.createTypeMap(SearchMovieByNameResponse.class, SearchMovieByNameResponseDTO.class);
-	    //propertyMapper.addMapping(SearchMovieByNameResponse::getMovies, SearchMovieByNameResponseDTO::getMovies);
-		SearchMovieByNameResponseDTO movie = modelMapper.map(response, SearchMovieByNameResponseDTO.class);
+		SearchMovieResponseDTO movie = modelMapper.map(response, SearchMovieResponseDTO.class);
 		return movie;
 	}
 }

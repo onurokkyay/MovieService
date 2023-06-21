@@ -6,10 +6,12 @@ import com.krawen.movieservice.entity.Movie;
 import lombok.Data;
 
 @Data
-public class SearchMovieByNameResponse {
+public class SearchMovieResponse {
     private Long page;
     @JsonProperty("results")
     private Movie[] movies;
+    @JsonProperty("total_pages")
     private Long totalPages;
+    @JsonProperty("total_results")
     private Long totalResults;
 }
