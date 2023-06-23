@@ -20,6 +20,7 @@ import com.krawen.movieservice.external.mapper.ExternalMovieServiceMapper;
 import com.krawen.movieservice.external.service.IExternalMovieService;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
+import com.krawen.movieservice.kafka.MovieKafkaProducer;
 import com.krawen.movieservice.properties.MovieServiceProperties;
 
 @Service
@@ -27,6 +28,9 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	
 	//@Autowired
 	//RestTemplate restTemplate;
+	
+	@Autowired
+	private MovieKafkaProducer kafkaProducer;
 	
 	@Autowired
 	MovieServiceProperties movieServiceProperties;
@@ -53,6 +57,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	
 	@Override
 	public SearchMovieResponseDTO searchMovie(SearchMovieRequest request) {
+		kafkaProducer.sendMessage(String.format("Movie searched by name: %s " ,request.getQuery()));
 		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
