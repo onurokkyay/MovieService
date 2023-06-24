@@ -13,4 +13,6 @@ public interface UserRepository  extends MongoRepository<User, String>{
     //List<User> retrieveChasedNotLookedUsers();
 	
 	User findByUserName(String userName);
+
+	boolean existsByUserName(String userName);
 }
