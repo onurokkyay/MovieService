@@ -9,10 +9,17 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 	
 	public static final String MOVIE_SERVICE_TOPIC_NAME = "movieService";
+	public static final String MOVIE_SERVICE_USER_TOPIC_NAME = "movieServiceUser";
 	
 	@Bean
 	public NewTopic movieServiceTopic() {
 		return TopicBuilder.name(MOVIE_SERVICE_TOPIC_NAME)
+				.build();
+	}
+	
+	@Bean
+	public NewTopic movieServiceUserTopic() {
+		return TopicBuilder.name(MOVIE_SERVICE_USER_TOPIC_NAME)
 				.build();
 	}
 }

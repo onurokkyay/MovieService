@@ -8,6 +8,7 @@ import com.krawen.movieservice.entity.User;
 import com.krawen.movieservice.entity.UserDTO;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
+import com.krawen.movieservice.kafka.UserKafkaProducer;
 import com.krawen.movieservice.repository.UserRepository;
 import com.krawen.movieservice.service.IUserService;
 
@@ -16,6 +17,9 @@ public class UserServiceImpl implements IUserService {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	UserKafkaProducer userKafkaProducer;
 
 	@Override
 	public UserDTO retrieveUserByUserName(String userName) throws UserNotFoundException {
@@ -39,6 +43,7 @@ public class UserServiceImpl implements IUserService {
 	        throw new UserNameExistException(user.getUserName());
 	    }
 	    user = userRepo.save(user);
+	    userKafkaProducer.sendMessage(user);
 	    return user;
 		
 	}
