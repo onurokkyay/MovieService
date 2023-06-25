@@ -12,7 +12,10 @@ import com.krawen.movieservice.kafka.UserKafkaProducer;
 import com.krawen.movieservice.repository.UserRepository;
 import com.krawen.movieservice.service.IUserService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements IUserService {
 	
 	@Autowired

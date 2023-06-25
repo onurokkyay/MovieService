@@ -12,9 +12,11 @@ import com.krawen.movieservice.config.KafkaTopicConfig;
 import com.krawen.movieservice.entity.User;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserKafkaProducer {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(UserKafkaProducer.class);
