@@ -2,6 +2,7 @@ package com.krawen.movieservice.kafka;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -21,6 +22,7 @@ public class UserKafkaProducer {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(UserKafkaProducer.class);
 	
+	@Autowired
 	private KafkaTemplate<String, User> kafkaTemplate;
 
 	public void sendMessage(User user) {

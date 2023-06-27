@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.krawen.movieservice.entity.MovieDTO;
 import com.krawen.movieservice.entity.User;
 import com.krawen.movieservice.entity.UserDTO;
 import com.krawen.movieservice.exception.UserNameExistException;
@@ -45,4 +47,42 @@ public class UserController {
 		return ResponseEntity.ok("User Created id:"+user.getId());
 	}
 	
+	/**
+	 * Adds a watched movie for a user.
+	 *
+	 * @param userName  The userName of the user
+	 * @param watchedMovie  The details of the new movie
+	 * @return          The HTTP response
+	 * @throws UserNotFoundException if the user is not found
+	 */
+	@Operation(summary = "Add a watched movie for a user", description = "This endpoint allows you to add a movie to the watched list of a user.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Watched movie added"),
+	        @ApiResponse(responseCode = "404", description = "User not found")
+	})
+    @PutMapping("/{userName}/movie/watched")
+    public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody MovieDTO watchedMovie) throws UserNotFoundException {
+    	userService.addWatchedMovie(userName,watchedMovie);
+    	return ResponseEntity.ok("Watched movie added");
+    }
+	
+	/**
+	 * Adds a fav movie for a user.
+	 *
+	 * @param userName  The userName of the user
+	 * @param favMovie  The details of the new movie
+	 * @return          The HTTP response
+	 * @throws UserNotFoundException if the user is not found
+	 */
+	@Operation(summary = "Add a fav movie for a user", description = "This endpoint allows you to add a movie to the fav list of a user.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "404", description = "User not found")
+	})
+    @PutMapping("/{userName}/movie/fav")
+    public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody MovieDTO favMovie) throws UserNotFoundException {
+    	userService.addFavMovie(userName,favMovie);
+    	return ResponseEntity.ok("Fav movie added");
+    }
+    
 }
