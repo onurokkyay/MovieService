@@ -21,7 +21,7 @@ public class MovieController {
 	@Autowired
 	IMovieService movieService;
 
-	@GetMapping("/movieservice/movie/{movieId}")
+	@GetMapping("/movieservice/movies/{movieId}")
 	@Operation(summary = "Retrieve a movie by its ID", description = "Returns the movie details for the given movie ID")
 	@ApiResponses(value = {
 	    @ApiResponse(responseCode = "200", description = "Successful retrieval of movie details"),
@@ -31,7 +31,7 @@ public class MovieController {
 		return movieService.retrieveMovieById(movieId);
 	}
 	
-	@GetMapping("/movieservice/search/movie")
+	@GetMapping("/movieservice/movies")
 	@Operation(summary = "Search movies", description = "Searches movies based on the provided criteria")
 	@ApiResponses(value = {
 	    @ApiResponse(responseCode = "200", description = "Successful retrieval of movie search results"),

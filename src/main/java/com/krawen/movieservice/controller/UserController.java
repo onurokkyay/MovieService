@@ -27,7 +27,7 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
-	@GetMapping("/movieservice/user/{userName}")
+	@GetMapping("/movieservice/users/{userName}")
 	@Operation(summary = "Retrieve a user by username", description = "Returns the user details for the given username")
 	@ApiResponses(value = {
 	    @ApiResponse(responseCode = "200", description = "Successful retrieval of user details"),
@@ -37,7 +37,7 @@ public class UserController {
 		return userService.retrieveUserByUserName(userName);
 	}
 	
-	@PostMapping("/movieservice/user")
+	@PostMapping("/movieservice/users")
 	@Operation(summary = "Create a new user", description = "Creates a new user with the provided user information")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "User created successfully"),
@@ -61,7 +61,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "200", description = "Watched movie added"),
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
-    @PutMapping("/{userName}/movie/watched")
+    @PutMapping("/movieservice/users/{userName}/movies/watched")
     public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody MovieDTO watchedMovie) throws UserNotFoundException {
     	userService.addWatchedMovie(userName,watchedMovie);
     	return ResponseEntity.ok("Watched movie added");
@@ -80,7 +80,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "200", description = "OK"),
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
-    @PutMapping("/{userName}/movie/fav")
+    @PutMapping("/movieservice/users/{userName}/movies/favorites")
     public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody MovieDTO favMovie) throws UserNotFoundException {
     	userService.addFavMovie(userName,favMovie);
     	return ResponseEntity.ok("Fav movie added");
@@ -99,7 +99,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "200", description = "Watched movie deleted"),
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
-	@DeleteMapping("/{userName}/movie/watched/{movieName}")
+	@DeleteMapping("/movieservice/users/{userName}/movies/watched/{movieName}")
 	public ResponseEntity<?> removeMovieFromWatchedMovies(
 	        @PathVariable("userName") String userName,
 	        @PathVariable("movieName") String movieName) throws UserNotFoundException {
@@ -120,7 +120,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "200", description = "Watched movie deleted"),
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
-    @DeleteMapping("/{userName}/movie/fav/{movieName}")
+    @DeleteMapping("/movieservice/users/{userName}/movies/favorites/{movieName}")
     public ResponseEntity<?>  removeMovieFromFavMovies(
             @PathVariable("userName") String userName,
             @PathVariable("movieName") String movieName) throws UserNotFoundException {
