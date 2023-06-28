@@ -1,11 +1,5 @@
 package com.krawen.movieservice.service.impl;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +65,20 @@ public class UserServiceImpl implements IUserService {
 	    ModelMapper modelMapper = new ModelMapper();
 	    Movie movie = modelMapper.map(favMovie,Movie.class);
 	    user.getFavMovies().add(movie);
+	    userRepo.save(user);
+	}
+	
+	@Override
+	public void removeWatchedMovie(String userName, String watchedMovieName) throws UserNotFoundException {
+		User user = retrieveUserEntityByUserName(userName);
+		user.removeWatchedMovieByName(watchedMovieName);
+	    userRepo.save(user);
+	}
+	
+	@Override
+	public void removeFavMovie(String userName, String favMovieName) throws UserNotFoundException {
+		User user = retrieveUserEntityByUserName(userName);
+		user.removeFavMovieByName(favMovieName);
 	    userRepo.save(user);
 	}
 	

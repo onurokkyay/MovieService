@@ -11,4 +11,6 @@ public interface IUserService {
 	User createUser(UserDTO user) throws UserNameExistException;
 	void addWatchedMovie(String userName, MovieDTO watchedMovie) throws UserNotFoundException;
 	void addFavMovie(String userName, MovieDTO favMovie) throws UserNotFoundException;
+	void removeWatchedMovie(String userName, String watchedMovieName) throws UserNotFoundException;
+	void removeFavMovie(String userName, String favMovieName) throws UserNotFoundException;
 }
