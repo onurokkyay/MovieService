@@ -2,12 +2,15 @@ package com.krawen.movieservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.krawen.movieservice.entity.MovieDTO;
 import com.krawen.movieservice.entity.User;
 import com.krawen.movieservice.entity.UserDTO;
 import com.krawen.movieservice.exception.UserNameExistException;
@@ -24,7 +27,7 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
-	@GetMapping("/movieservice/user/{userName}")
+	@GetMapping("/movieservice/users/{userName}")
 	@Operation(summary = "Retrieve a user by username", description = "Returns the user details for the given username")
 	@ApiResponses(value = {
 	    @ApiResponse(responseCode = "200", description = "Successful retrieval of user details"),
@@ -34,7 +37,7 @@ public class UserController {
 		return userService.retrieveUserByUserName(userName);
 	}
 	
-	@PostMapping("/movieservice/user")
+	@PostMapping("/movieservice/users")
 	@Operation(summary = "Create a new user", description = "Creates a new user with the provided user information")
 	@ApiResponses(value = {
 	        @ApiResponse(responseCode = "200", description = "User created successfully"),
@@ -45,4 +48,84 @@ public class UserController {
 		return ResponseEntity.ok("User Created id:"+user.getId());
 	}
 	
+	/**
+	 * Adds a watched movie for a user.
+	 *
+	 * @param userName  The userName of the user
+	 * @param watchedMovie  The details of the new movie
+	 * @return          The HTTP response
+	 * @throws UserNotFoundException if the user is not found
+	 */
+	@Operation(summary = "Add a watched movie for a user", description = "This endpoint allows you to add a movie to the watched list of a user.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Watched movie added"),
+	        @ApiResponse(responseCode = "404", description = "User not found")
+	})
+    @PutMapping("/movieservice/users/{userName}/movies/watched")
+    public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody MovieDTO watchedMovie) throws UserNotFoundException {
+    	userService.addWatchedMovie(userName,watchedMovie);
+    	return ResponseEntity.ok("Watched movie added");
+    }
+	
+	/**
+	 * Adds a fav movie for a user.
+	 *
+	 * @param userName  The userName of the user
+	 * @param favMovie  The details of the new movie
+	 * @return          The HTTP response
+	 * @throws UserNotFoundException if the user is not found
+	 */
+	@Operation(summary = "Add a fav movie for a user", description = "This endpoint allows you to add a movie to the fav list of a user.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "OK"),
+	        @ApiResponse(responseCode = "404", description = "User not found")
+	})
+    @PutMapping("/movieservice/users/{userName}/movies/favorites")
+    public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody MovieDTO favMovie) throws UserNotFoundException {
+    	userService.addFavMovie(userName,favMovie);
+    	return ResponseEntity.ok("Fav movie added");
+    }
+	
+	/**
+	 * Remove a movie from the watched movies list of a user.
+	 *
+	 * @param userName   User name
+	 * @param movieName  Movie name
+	 * @return HTTP response indicating success
+	 * @throws UserNotFoundException if the user is not found
+	 */
+	@Operation(summary = "Remove a movie from the watched movies list", description = "This endpoint allows you to remove a movie from the watched movies list of a user.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Watched movie deleted"),
+	        @ApiResponse(responseCode = "404", description = "User not found")
+	})
+	@DeleteMapping("/movieservice/users/{userName}/movies/watched/{movieName}")
+	public ResponseEntity<?> removeMovieFromWatchedMovies(
+	        @PathVariable("userName") String userName,
+	        @PathVariable("movieName") String movieName) throws UserNotFoundException {
+	    userService.removeWatchedMovie(userName, movieName);
+	    return ResponseEntity.ok("Watched movie deleted");
+	}
+    
+	/**
+	 * Remove a movie from the fav movies list of a user.
+	 *
+	 * @param userName   User name
+	 * @param movieName  Movie name
+	 * @return HTTP response indicating success
+	 * @throws UserNotFoundException if the user is not found
+	 */
+	@Operation(summary = "Remove a movie from the fav movies list", description = "This endpoint allows you to remove a movie from the fav movies list of a user.")
+	@ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Watched movie deleted"),
+	        @ApiResponse(responseCode = "404", description = "User not found")
+	})
+    @DeleteMapping("/movieservice/users/{userName}/movies/favorites/{movieName}")
+    public ResponseEntity<?>  removeMovieFromFavMovies(
+            @PathVariable("userName") String userName,
+            @PathVariable("movieName") String movieName) throws UserNotFoundException {
+        userService.removeFavMovie(userName, movieName);
+        return ResponseEntity.ok("Fav movie deleted");
+    }
+    
 }
