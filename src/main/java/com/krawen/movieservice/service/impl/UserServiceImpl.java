@@ -8,6 +8,7 @@ import com.krawen.movieservice.entity.Movie;
 import com.krawen.movieservice.entity.MovieDTO;
 import com.krawen.movieservice.entity.User;
 import com.krawen.movieservice.entity.UserDTO;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
 import com.krawen.movieservice.kafka.UserKafkaProducer;
@@ -69,14 +70,14 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	@Override
-	public void removeWatchedMovie(String userName, String watchedMovieName) throws UserNotFoundException {
+	public void removeWatchedMovie(String userName, String watchedMovieName) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
 		user.removeWatchedMovieByName(watchedMovieName);
 	    userRepo.save(user);
 	}
 	
 	@Override
-	public void removeFavMovie(String userName, String favMovieName) throws UserNotFoundException {
+	public void removeFavMovie(String userName, String favMovieName) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
 		user.removeFavMovieByName(favMovieName);
 	    userRepo.save(user);
