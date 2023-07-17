@@ -1,11 +1,14 @@
 package com.krawen.movieservice.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetailDTO;
 import com.krawen.movieservice.entity.SearchMovieResponseDTO;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
@@ -47,5 +50,13 @@ public class MovieController {
 			@ApiResponse(responseCode = "400", description = "Invalid request parameters") })
 	public SearchMovieResponseDTO retrievePopularMovies(@RequestParam(defaultValue = "1") int page) {
 		return movieService.retrievePopularMovies(page);
+	}
+
+	@GetMapping("/movieservice/movies/genres")
+	@Operation(summary = "Retrieve genres", description = "Retrieve genres for movies")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful retrieval of genres results"), })
+	public List<Genre> retrieveGenres() {
+		return movieService.retrieveGenres();
 	}
 }
