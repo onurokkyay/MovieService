@@ -74,9 +74,31 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
 				SearchMovieResponse.class);
 
-		SearchMovieResponseDTO movie = extMovieServiceMapper
+		SearchMovieResponseDTO movies = extMovieServiceMapper
 				.mapToSearchMovieByNameResponseDTO(response.getBody());
-		return movie;
+		return movies;
+ 
+	}
+	
+	@Override
+	public SearchMovieResponseDTO retrievePopularMovies(int page) {
+		RestTemplate restTemplate = new RestTemplate();
+		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
+		HttpHeaders headers = createHttpHeaders();
+
+		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/popular")
+				.queryParam("page", page)
+				.build()
+				.toUri();
+
+		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
+		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
+				SearchMovieResponse.class);
+
+		SearchMovieResponseDTO movies = extMovieServiceMapper
+				.mapToSearchMovieByNameResponseDTO(response.getBody());
+		return movies;
  
 	}
 

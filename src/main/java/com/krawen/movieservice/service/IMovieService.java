@@ -7,4 +7,5 @@ import com.krawen.movieservice.external.service.SearchMovieRequest;
 public interface IMovieService {
 	MovieDetailDTO retrieveMovieById(int movieId);
 	SearchMovieResponseDTO searchMovie(SearchMovieRequest request);
+	SearchMovieResponseDTO retrievePopularMovies(int page);
 }

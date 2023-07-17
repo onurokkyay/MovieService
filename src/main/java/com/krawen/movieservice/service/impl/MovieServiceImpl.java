@@ -24,5 +24,10 @@ public class MovieServiceImpl implements IMovieService {
 	public SearchMovieResponseDTO searchMovie(SearchMovieRequest request) {
 		return extMovieService.searchMovie(request);
 	}
+	
+	@Override
+	public SearchMovieResponseDTO retrievePopularMovies(int page) {
+		return extMovieService.retrievePopularMovies(page);
+	}
 
 }

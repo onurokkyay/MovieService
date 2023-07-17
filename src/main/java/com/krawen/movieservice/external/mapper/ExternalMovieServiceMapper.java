@@ -30,7 +30,11 @@ public class ExternalMovieServiceMapper {
 
 	public SearchMovieResponseDTO mapToSearchMovieByNameResponseDTO(SearchMovieResponse response) {
 		ModelMapper modelMapper = new ModelMapper();
-		SearchMovieResponseDTO movie = modelMapper.map(response, SearchMovieResponseDTO.class);
-		return movie;
+		SearchMovieResponseDTO searchMovie = modelMapper.map(response, SearchMovieResponseDTO.class);
+		searchMovie.getMovies().stream().forEach(movie -> {
+			movie.setBackdropPath(imagePath.concat(movie.getBackdropPath()));
+			movie.setPosterPath(imagePath.concat(movie.getPosterPath()));
+		});
+		return searchMovie;
 	}
 }
