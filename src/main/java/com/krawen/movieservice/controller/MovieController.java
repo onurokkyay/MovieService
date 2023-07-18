@@ -15,6 +15,7 @@ import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.service.IMovieService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -58,5 +59,45 @@ public class MovieController {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of genres results"), })
 	public List<Genre> retrieveGenres() {
 		return movieService.retrieveGenres();
+	}
+
+	/**
+	 * The `withGenres` parameter is used to specify the criteria for discovering
+	 * movies. It can be a comma (AND) or pipe (OR) separated query.
+	 * 
+	 * AND/OR Logic Also note that a number of filters support being comma (,) or
+	 * pipe (|) separated. Comma's are treated like an AND query while pipe's are
+	 * treated like an OR. This allows for quite complex filtering depending on your
+	 * desired results. Examples: - "Action,Adventure" --> Retrieve movies of both
+	 * Action and Adventure genres (AND operator). - "Drama|Romance" --> Retrieve
+	 * movies of either Drama or Romance genre (OR operator). - "Comedy" -->
+	 * Retrieve movies of Comedy genre only.
+	 * 
+	 * The complete list of valid genres will be provided by a specific application
+	 * or service (retrieveGenres), and you should use the available genres to
+	 * obtain accurate results.
+	 * 
+	 * @param withGenres A string specifying the genres to be used for movie
+	 *                   discovery.
+	 * @return A SearchMovieResponseDTO object containing the discovered movies.
+	 */
+	@GetMapping("/movieservice/movies/discover")
+	@Operation(summary = "Discover movies", description = "Discover movies based on the provided criteria."
+			+ "	  AND/OR Logic: Also note that a number of filters support being comma (,) or\r\n"
+			+ "	  pipe (|) separated. Comma's are treated like an AND query while pipe's are\r\n"
+			+ "	  treated like an OR. This allows for quite complex filtering depending on your\r\n"
+			+ "	  desired results. Examples: - \"Action,Adventure\" --> Retrieve movies of both\r\n"
+			+ "	  Action and Adventure genres (AND operator). - \"Drama|Romance\" --> Retrieve\r\n"
+			+ "	  movies of either Drama or Romance genre (OR operator). - \"Comedy\" -->\r\n"
+			+ "	  Retrieve movies of Comedy genre only.\r\n" + "	 * \r\n"
+			+ "	  The complete list of valid genres will be provided by a specific application\r\n"
+			+ "	  or service (retrieveGenres), and you should use the available genres to\r\n"
+			+ "	  obtain accurate results.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successful retrieval of discover movie results. "),
+			@ApiResponse(responseCode = "400", description = "Invalid request parameters") })
+	public SearchMovieResponseDTO retrievePopularMovies(
+			@Parameter(name = "withGenres", description = "A string specifying the genres to be used for movie discovery.", example = "Action,Adventure") String withGenres) {
+		return movieService.discoverMovie(withGenres);
 	}
 }

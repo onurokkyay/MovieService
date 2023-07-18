@@ -12,4 +12,5 @@ public interface IMovieService {
 	SearchMovieResponseDTO searchMovie(SearchMovieRequest request);
 	SearchMovieResponseDTO retrievePopularMovies(int page);
 	List<Genre> retrieveGenres();
+	SearchMovieResponseDTO discoverMovie(String withGenres);
 }

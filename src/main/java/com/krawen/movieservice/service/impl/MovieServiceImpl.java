@@ -37,5 +37,10 @@ public class MovieServiceImpl implements IMovieService {
 	public List<Genre> retrieveGenres() {
 		return extMovieService.retrieveGenres();
 	}
+	
+	@Override
+	public SearchMovieResponseDTO discoverMovie(String withGenres) {
+		return extMovieService.discoverMovie(withGenres);
+	}
 
 }
