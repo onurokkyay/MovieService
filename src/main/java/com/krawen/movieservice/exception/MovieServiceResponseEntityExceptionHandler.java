@@ -18,4 +18,9 @@ public class MovieServiceResponseEntityExceptionHandler extends ResponseEntityEx
     protected ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    
+    @ExceptionHandler(MovieNotFoundException.class)
+    protected ResponseEntity<Object> handleMovieNotFoundException(MovieNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }

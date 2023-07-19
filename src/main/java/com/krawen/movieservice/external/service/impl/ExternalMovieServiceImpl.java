@@ -1,6 +1,7 @@
 package com.krawen.movieservice.external.service.impl;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetail;
 import com.krawen.movieservice.entity.MovieDetailDTO;
+import com.krawen.movieservice.entity.RetrieveGenresResponse;
 import com.krawen.movieservice.entity.SearchMovieResponseDTO;
 import com.krawen.movieservice.external.mapper.ExternalMovieServiceMapper;
 import com.krawen.movieservice.external.service.IExternalMovieService;
@@ -62,7 +65,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/search/movie")
+		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
 				.queryParam("query", request.getQuery())
 				.queryParam("page", request.getPage())
 				.queryParam("include_adult", request.isIncludeAdult())
@@ -74,9 +77,70 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
 				SearchMovieResponse.class);
 
-		SearchMovieResponseDTO movie = extMovieServiceMapper
+		SearchMovieResponseDTO movies = extMovieServiceMapper
 				.mapToSearchMovieByNameResponseDTO(response.getBody());
-		return movie;
+		return movies;
+ 
+	}
+	
+	@Override
+	public SearchMovieResponseDTO retrievePopularMovies(int page) {
+		RestTemplate restTemplate = new RestTemplate();
+		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
+		HttpHeaders headers = createHttpHeaders();
+
+		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/popular")
+				.queryParam("page", page)
+				.build()
+				.toUri();
+
+		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
+		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
+				SearchMovieResponse.class);
+
+		SearchMovieResponseDTO movies = extMovieServiceMapper
+				.mapToSearchMovieByNameResponseDTO(response.getBody());
+		return movies;
+ 
+	}
+	
+	@Override
+	public List<Genre> retrieveGenres() {
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = createHttpHeaders();
+		
+		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/genre/movie/list")
+				.build()
+				.toUri();
+
+		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
+		ResponseEntity<RetrieveGenresResponse> response = restTemplate.exchange(requestEntity,
+				RetrieveGenresResponse.class);
+
+		return response.getBody().getGenres();
+	}
+	
+	@Override
+	public SearchMovieResponseDTO discoverMovie(String withGenres) {
+		RestTemplate restTemplate = new RestTemplate();
+		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
+		HttpHeaders headers = createHttpHeaders();
+
+		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/popular")
+				.queryParam("with_genres", withGenres)
+				.build()
+				.toUri();
+
+		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
+		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
+				SearchMovieResponse.class);
+
+		SearchMovieResponseDTO movies = extMovieServiceMapper
+				.mapToSearchMovieByNameResponseDTO(response.getBody());
+		return movies;
  
 	}
 

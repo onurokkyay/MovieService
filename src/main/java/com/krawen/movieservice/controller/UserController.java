@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.krawen.movieservice.entity.MovieDTO;
 import com.krawen.movieservice.entity.User;
 import com.krawen.movieservice.entity.UserDTO;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
 import com.krawen.movieservice.service.IUserService;
@@ -93,6 +94,7 @@ public class UserController {
 	 * @param movieName  Movie name
 	 * @return HTTP response indicating success
 	 * @throws UserNotFoundException if the user is not found
+	 * @throws MovieNotFoundException 
 	 */
 	@Operation(summary = "Remove a movie from the watched movies list", description = "This endpoint allows you to remove a movie from the watched movies list of a user.")
 	@ApiResponses(value = {
@@ -102,7 +104,7 @@ public class UserController {
 	@DeleteMapping("/movieservice/users/{userName}/movies/watched/{movieName}")
 	public ResponseEntity<?> removeMovieFromWatchedMovies(
 	        @PathVariable("userName") String userName,
-	        @PathVariable("movieName") String movieName) throws UserNotFoundException {
+	        @PathVariable("movieName") String movieName) throws UserNotFoundException, MovieNotFoundException {
 	    userService.removeWatchedMovie(userName, movieName);
 	    return ResponseEntity.ok("Watched movie deleted");
 	}
@@ -114,6 +116,7 @@ public class UserController {
 	 * @param movieName  Movie name
 	 * @return HTTP response indicating success
 	 * @throws UserNotFoundException if the user is not found
+	 * @throws MovieNotFoundException 
 	 */
 	@Operation(summary = "Remove a movie from the fav movies list", description = "This endpoint allows you to remove a movie from the fav movies list of a user.")
 	@ApiResponses(value = {
@@ -123,7 +126,7 @@ public class UserController {
     @DeleteMapping("/movieservice/users/{userName}/movies/favorites/{movieName}")
     public ResponseEntity<?>  removeMovieFromFavMovies(
             @PathVariable("userName") String userName,
-            @PathVariable("movieName") String movieName) throws UserNotFoundException {
+            @PathVariable("movieName") String movieName) throws UserNotFoundException, MovieNotFoundException {
         userService.removeFavMovie(userName, movieName);
         return ResponseEntity.ok("Fav movie deleted");
     }
