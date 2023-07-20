@@ -3,6 +3,7 @@ package com.krawen.movieservice.aspect;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
@@ -44,6 +45,14 @@ public class LoggingAspect {
 				LOGGER.info("Method Argument: {}", arg);
 			}
 		}
+	}
+
+	@AfterReturning(pointcut = "execution(* com.krawen.movieservice.controller..*(..))", returning = "result")
+	public void logAfter(JoinPoint joinPoint, Object result) {
+
+		LOGGER.info("Method returned:" + joinPoint.getSignature().getName() + ", Result: " + result.getClass().getName()
+				+ " -->" + result);
+
 	}
 
 }
