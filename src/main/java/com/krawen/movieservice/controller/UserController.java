@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.krawen.movieservice.aspect.Log;
 import com.krawen.movieservice.entity.MovieDTO;
 import com.krawen.movieservice.entity.User;
 import com.krawen.movieservice.entity.UserDTO;
@@ -38,6 +39,7 @@ public class UserController {
 		return userService.retrieveUserByUserName(userName);
 	}
 	
+	@Log
 	@PostMapping("/movieservice/users")
 	@Operation(summary = "Create a new user", description = "Creates a new user with the provided user information")
 	@ApiResponses(value = {
