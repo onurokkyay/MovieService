@@ -1,9 +1,11 @@
 package com.krawen.movieservice.aspect;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -58,8 +60,21 @@ public class LoggingAspect {
 	@Before("logPointcut()")
 	public void logAllMethodCallsAdvice(JoinPoint joinPoint) {
 		logArgs(joinPoint.getArgs());
-		System.out.println("@Log Before " + joinPoint.getSignature().getName());
+		LOGGER.info("@Log Before " + joinPoint.getSignature().getName());
 	}
+	
+    @Pointcut("within(com.krawen.movieservice.controller.UserController)")
+    public void validationPointcut(){}
+    
+    @Around("validationPointcut()")
+    public void aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+    	LOGGER.info("Validation");
+        //int arg = (int) joinPoint.getArgs()[0];
+        //if (arg < 0)
+        //    throw new RuntimeException("Argument should not be negative");
+        //else
+            joinPoint.proceed();
+    }
 
 	private void logArgs(Object[] args) {
 		if (args != null && args.length > 0) {
