@@ -64,8 +64,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
-
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
+		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/search/movie")
 				.queryParam("query", request.getQuery())
 				.queryParam("page", request.getPage())
 				.queryParam("include_adult", request.isIncludeAdult())
@@ -128,7 +127,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/popular")
+		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
 				.queryParam("with_genres", withGenres)
 				.build()
 				.toUri();
