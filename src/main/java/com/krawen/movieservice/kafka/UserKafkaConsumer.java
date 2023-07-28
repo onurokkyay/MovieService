@@ -13,7 +13,7 @@ public class UserKafkaConsumer {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserKafkaConsumer.class);
 
-	@KafkaListener(topics = KafkaTopicConfig.MOVIE_SERVICE_USER_TOPIC_NAME, groupId= "movieServiceGroup")
+	@KafkaListener(topics = KafkaTopicConfig.MOVIE_SERVICE_USER_TOPIC_NAME, groupId= "userServiceGroup")
 	public void consume(User user) {
 		LOGGER.info(String.format("Message received : %s",user.toString()));
 	}
