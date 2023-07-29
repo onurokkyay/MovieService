@@ -122,13 +122,14 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	}
 	
 	@Override
-	public SearchMovieResponseDTO discoverMovie(String withGenres) {
+	public SearchMovieResponseDTO discoverMovie(String withGenres,int page) {
 		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
 		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
 				.queryParam("with_genres", withGenres)
+				.queryParam("page", page)
 				.build()
 				.toUri();
 

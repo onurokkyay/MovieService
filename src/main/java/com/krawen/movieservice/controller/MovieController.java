@@ -96,8 +96,9 @@ public class MovieController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of discover movie results. "),
 			@ApiResponse(responseCode = "400", description = "Invalid request parameters") })
-	public SearchMovieResponseDTO retrievePopularMovies(
+	public SearchMovieResponseDTO discoverMovie(
+			@RequestParam(defaultValue = "1") int page,
 			@Parameter(name = "withGenres", description = "A string specifying the genres to be used for movie discovery.", example = "Action,Adventure") String withGenres) {
-		return movieService.discoverMovie(withGenres);
+		return movieService.discoverMovie(withGenres,page);
 	}
 }

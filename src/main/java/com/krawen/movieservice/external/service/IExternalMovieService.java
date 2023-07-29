@@ -11,5 +11,5 @@ public interface IExternalMovieService {
 	SearchMovieResponseDTO searchMovie(SearchMovieRequest movieName);
 	SearchMovieResponseDTO retrievePopularMovies(int page);
 	List<Genre> retrieveGenres();
-	SearchMovieResponseDTO discoverMovie(String withGenres);
+	SearchMovieResponseDTO discoverMovie(String withGenres, int page);
 }

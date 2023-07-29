@@ -39,8 +39,8 @@ public class MovieServiceImpl implements IMovieService {
 	}
 	
 	@Override
-	public SearchMovieResponseDTO discoverMovie(String withGenres) {
-		return extMovieService.discoverMovie(withGenres);
+	public SearchMovieResponseDTO discoverMovie(String withGenres,int page) {
+		return extMovieService.discoverMovie(withGenres,page);
 	}
 
 }
