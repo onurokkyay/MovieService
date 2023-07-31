@@ -29,8 +29,8 @@ import com.krawen.movieservice.properties.MovieServiceProperties;
 @Service
 public class ExternalMovieServiceImpl implements IExternalMovieService {
 	
-	//@Autowired
-	//RestTemplate restTemplate;
+	@Autowired
+	RestTemplate restTemplate;
 	
 	@Autowired
 	private MovieKafkaProducer kafkaProducer;
@@ -48,7 +48,6 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 
 	@Override
 	public MovieDetailDTO retrieveMovieById(int movieId) {
-		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 		
@@ -61,7 +60,6 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	@Override
 	public SearchMovieResponseDTO searchMovie(SearchMovieRequest request) {
 		kafkaProducer.sendMessage(String.format("Movie searched by name: %s " ,request.getQuery()));
-		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/search/movie")
@@ -84,7 +82,6 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	
 	@Override
 	public SearchMovieResponseDTO retrievePopularMovies(int page) {
-		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
@@ -106,7 +103,6 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	
 	@Override
 	public List<Genre> retrieveGenres() {
-		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = createHttpHeaders();
 		
 		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/genre/movie/list")
@@ -123,7 +119,6 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	
 	@Override
 	public SearchMovieResponseDTO discoverMovie(String withGenres,int page) {
-		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
