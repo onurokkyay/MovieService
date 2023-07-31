@@ -37,6 +37,9 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	
 	@Autowired
 	MovieServiceProperties movieServiceProperties;
+	
+	private final String baseUrl="https://api.themoviedb.org/3";
+	
 
 	private HttpHeaders createHttpHeaders()
 	{
@@ -52,7 +55,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		HttpHeaders headers = createHttpHeaders();
 		
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-	    ResponseEntity<MovieDetail> response = restTemplate.exchange("https://api.themoviedb.org/3/movie/"+movieId, HttpMethod.GET, entity, MovieDetail.class);
+	    ResponseEntity<MovieDetail> response = restTemplate.exchange(baseUrl+movieId, HttpMethod.GET, entity, MovieDetail.class);
 	    MovieDetailDTO movie = extMovieServiceMapper.mapToMovieDetailDTO(response.getBody());
 		return movie;
 	}
@@ -62,7 +65,8 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		kafkaProducer.sendMessage(String.format("Movie searched by name: %s " ,request.getQuery()));
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/search/movie")
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+				.path("/search/movie")
 				.queryParam("query", request.getQuery())
 				.queryParam("page", request.getPage())
 				.queryParam("include_adult", request.isIncludeAdult())
@@ -85,7 +89,8 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/popular")
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+				.path("/movie/popular")
 				.queryParam("page", page)
 				.build()
 				.toUri();
@@ -105,7 +110,8 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	public List<Genre> retrieveGenres() {
 		HttpHeaders headers = createHttpHeaders();
 		
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/genre/movie/list")
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+				.path("/genre/movie/list")
 				.build()
 				.toUri();
 
@@ -122,7 +128,8 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+				.path("/discover/movie")
 				.queryParam("with_genres", withGenres)
 				.queryParam("page", page)
 				.build()
