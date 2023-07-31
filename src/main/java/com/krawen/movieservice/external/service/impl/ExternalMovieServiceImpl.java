@@ -55,7 +55,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		HttpHeaders headers = createHttpHeaders();
 		
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-	    ResponseEntity<MovieDetail> response = restTemplate.exchange(baseUrl+movieId, HttpMethod.GET, entity, MovieDetail.class);
+	    ResponseEntity<MovieDetail> response = restTemplate.exchange(baseUrl+"/movie/"+movieId, HttpMethod.GET, entity, MovieDetail.class);
 	    MovieDetailDTO movie = extMovieServiceMapper.mapToMovieDetailDTO(response.getBody());
 		return movie;
 	}
