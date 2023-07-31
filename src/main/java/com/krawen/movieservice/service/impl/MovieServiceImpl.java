@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetailDTO;
 import com.krawen.movieservice.entity.SearchMovieResponseDTO;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.IExternalMovieService;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.service.IMovieService;
@@ -19,7 +20,7 @@ public class MovieServiceImpl implements IMovieService {
 	IExternalMovieService extMovieService;
 
 	@Override
-	public MovieDetailDTO retrieveMovieById(int movieId) {
+	public MovieDetailDTO retrieveMovieById(int movieId) throws MovieNotFoundException {
 		return extMovieService.retrieveMovieById(movieId);
 	}
 

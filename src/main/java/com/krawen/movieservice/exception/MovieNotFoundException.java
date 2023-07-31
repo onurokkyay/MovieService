@@ -6,4 +6,8 @@ public class MovieNotFoundException extends Exception {
         super("Movie not found : " + movie);
     }
 
+	public MovieNotFoundException(int movieId) {
+		super("Movie not found with id : " + movieId);
+	}
+
 }

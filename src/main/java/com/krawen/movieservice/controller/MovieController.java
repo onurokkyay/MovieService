@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetailDTO;
 import com.krawen.movieservice.entity.SearchMovieResponseDTO;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.service.IMovieService;
 
@@ -29,7 +30,7 @@ public class MovieController {
 	@Operation(summary = "Retrieve a movie by its ID", description = "Returns the movie details for the given movie ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successful retrieval of movie details"),
 			@ApiResponse(responseCode = "404", description = "Movie not found") })
-	public MovieDetailDTO retrieveMovieById(@PathVariable int movieId) {
+	public MovieDetailDTO retrieveMovieById(@PathVariable int movieId) throws MovieNotFoundException {
 		return movieService.retrieveMovieById(movieId);
 	}
 
