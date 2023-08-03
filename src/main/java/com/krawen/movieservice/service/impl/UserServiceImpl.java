@@ -46,7 +46,7 @@ public class UserServiceImpl implements IUserService {
 	        throw new UserNameExistException(user.getUserName());
 	    }
 	    user = userRepo.save(user);
-	    userKafkaProducer.sendMessage(user);
+	    userKafkaProducer.sendMessage(userDTO);
 	    return user;
 		
 	}

@@ -60,7 +60,7 @@ class UserServiceImplTest {
 	        assertEquals(userDTO.getUserName(), user.getUserName());
 	        verify(userRepo, times(1)).existsByUserName(userDTO.getUserName());
 	        verify(userRepo, times(1)).save(any(User.class));
-	        verify(userKafkaProducer, times(1)).sendMessage(user); 
+	        verify(userKafkaProducer, times(1)).sendMessage(userDTO); 
 
 	    }
 
@@ -72,7 +72,7 @@ class UserServiceImplTest {
 	        assertThrows(UserNameExistException.class, () -> userService.createUser(userDTO));
 	        verify(userRepo, times(1)).existsByUserName(userDTO.getUserName());
 	        verify(userRepo, times(0)).save(any(User.class));
-	        verify(userKafkaProducer, times(0)).sendMessage(any(User.class));
+	        verify(userKafkaProducer, times(0)).sendMessage(any(UserDTO.class));
 	    }
 	    
 		 @Test
