@@ -1,7 +1,7 @@
 package com.krawen.movieservice.service;
 
+import com.krawen.movieservice.dto.UserDTO;
 import com.krawen.movieservice.entity.User;
-import com.krawen.movieservice.entity.UserDTO;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;

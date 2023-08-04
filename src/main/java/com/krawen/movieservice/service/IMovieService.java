@@ -2,9 +2,9 @@ package com.krawen.movieservice.service;
 
 import java.util.List;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.entity.Genre;
-import com.krawen.movieservice.entity.MovieDetailDTO;
-import com.krawen.movieservice.entity.SearchMovieResponseDTO;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 

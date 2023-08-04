@@ -10,7 +10,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import com.krawen.movieservice.config.KafkaTopicConfig;
-import com.krawen.movieservice.entity.UserDTO;
+import com.krawen.movieservice.dto.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

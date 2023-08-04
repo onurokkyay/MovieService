@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.entity.Genre;
-import com.krawen.movieservice.entity.MovieDetailDTO;
-import com.krawen.movieservice.entity.SearchMovieResponseDTO;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.service.IMovieService;

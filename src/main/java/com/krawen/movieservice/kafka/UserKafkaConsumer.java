@@ -6,7 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import com.krawen.movieservice.config.KafkaTopicConfig;
-import com.krawen.movieservice.entity.UserDTO;
+import com.krawen.movieservice.dto.UserDTO;
 
 @Service
 public class UserKafkaConsumer {

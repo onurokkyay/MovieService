@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.krawen.movieservice.dto.UserDTO;
 import com.krawen.movieservice.entity.User;
-import com.krawen.movieservice.entity.UserDTO;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
 import com.krawen.movieservice.kafka.UserKafkaProducer;
@@ -36,7 +36,7 @@ class UserServiceImplTest {
     public void setup() {
         userRepo = mock(UserRepository.class);
         userKafkaProducer = mock(UserKafkaProducer.class);
-        userService = new UserServiceImpl(userRepo, userKafkaProducer);
+        userService = new UserServiceImpl(userRepo, userKafkaProducer, null);
         userDTO = new UserDTO();
         userDTO.setUserName(testUsername);
         savedUser = new User();

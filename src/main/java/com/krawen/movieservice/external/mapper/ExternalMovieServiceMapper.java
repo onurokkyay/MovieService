@@ -4,9 +4,9 @@ import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.entity.MovieDetail;
-import com.krawen.movieservice.entity.MovieDetailDTO;
-import com.krawen.movieservice.entity.SearchMovieResponseDTO;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
 
 import io.micrometer.common.util.StringUtils;

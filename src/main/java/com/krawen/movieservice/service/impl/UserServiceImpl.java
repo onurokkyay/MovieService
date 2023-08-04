@@ -4,12 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.krawen.movieservice.dto.MovieDTO;
+import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.UserDTO;
 import com.krawen.movieservice.entity.Movie;
-import com.krawen.movieservice.entity.MovieDTO;
 import com.krawen.movieservice.entity.MovieDetail;
-import com.krawen.movieservice.entity.MovieDetailDTO;
 import com.krawen.movieservice.entity.User;
-import com.krawen.movieservice.entity.UserDTO;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;

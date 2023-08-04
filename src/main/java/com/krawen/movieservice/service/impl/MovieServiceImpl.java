@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.entity.Genre;
-import com.krawen.movieservice.entity.MovieDetailDTO;
-import com.krawen.movieservice.entity.SearchMovieResponseDTO;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.IExternalMovieService;
 import com.krawen.movieservice.external.service.SearchMovieRequest;

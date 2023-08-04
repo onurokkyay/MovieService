@@ -1,4 +1,4 @@
-package com.krawen.movieservice.entity;
+package com.krawen.movieservice.dto;
 
 import lombok.Data;
 

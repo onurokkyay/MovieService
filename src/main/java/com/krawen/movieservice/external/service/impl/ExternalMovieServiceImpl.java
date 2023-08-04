@@ -16,11 +16,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetail;
-import com.krawen.movieservice.entity.MovieDetailDTO;
 import com.krawen.movieservice.entity.RetrieveGenresResponse;
-import com.krawen.movieservice.entity.SearchMovieResponseDTO;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.mapper.ExternalMovieServiceMapper;
 import com.krawen.movieservice.external.service.IExternalMovieService;
