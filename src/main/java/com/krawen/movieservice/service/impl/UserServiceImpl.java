@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.krawen.movieservice.entity.Movie;
 import com.krawen.movieservice.entity.MovieDTO;
+import com.krawen.movieservice.entity.MovieDetail;
+import com.krawen.movieservice.entity.MovieDetailDTO;
 import com.krawen.movieservice.entity.User;
 import com.krawen.movieservice.entity.UserDTO;
 import com.krawen.movieservice.exception.MovieNotFoundException;
@@ -13,6 +15,7 @@ import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
 import com.krawen.movieservice.kafka.UserKafkaProducer;
 import com.krawen.movieservice.repository.UserRepository;
+import com.krawen.movieservice.service.IMovieService;
 import com.krawen.movieservice.service.IUserService;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +29,9 @@ public class UserServiceImpl implements IUserService {
 	
 	@Autowired
 	UserKafkaProducer userKafkaProducer;
+	
+	@Autowired
+	IMovieService movieService;
 
 	@Override
 	public UserDTO retrieveUserByUserName(String userName) throws UserNotFoundException {
@@ -52,19 +58,21 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public void addWatchedMovie(String userName, MovieDTO watchedMovie) throws UserNotFoundException {
+	public void addWatchedMovie(String userName, int movieId) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
 	    ModelMapper modelMapper = new ModelMapper();
-	    Movie movie = modelMapper.map(watchedMovie,Movie.class);
+	    MovieDetailDTO watchedMovie = movieService.retrieveMovieById(movieId);
+	    MovieDetail movie = modelMapper.map(watchedMovie,MovieDetail.class);
 	    user.getWatchedMovies().add(movie);
 	    userRepo.save(user);
 	}
 	
 	@Override
-	public void addFavMovie(String userName, MovieDTO favMovie) throws UserNotFoundException {
+	public void addFavMovie(String userName, int movieId) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
 	    ModelMapper modelMapper = new ModelMapper();
-	    Movie movie = modelMapper.map(favMovie,Movie.class);
+	    MovieDetailDTO favMovie = movieService.retrieveMovieById(movieId);
+	    MovieDetail movie = modelMapper.map(favMovie,MovieDetail.class);
 	    user.getFavMovies().add(movie);
 	    userRepo.save(user);
 	}

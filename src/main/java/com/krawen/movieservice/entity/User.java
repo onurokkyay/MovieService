@@ -16,17 +16,17 @@ public class User {
 	private String id;
 	private String userName;
 	private String mail;
-	private List<Movie> watchedMovies;
-	private List<Movie> favMovies;
+	private List<MovieDetail> watchedMovies;
+	private List<MovieDetail> favMovies;
 	
-	public List<Movie> getWatchedMovies() {
+	public List<MovieDetail> getWatchedMovies() {
 		if (watchedMovies == null) {
 			watchedMovies = new ArrayList<>();
 		}
 		return watchedMovies;
 	}
 	
-	public List<Movie> getFavMovies() {
+	public List<MovieDetail> getFavMovies() {
 		if (favMovies == null) {
 			favMovies = new ArrayList<>();
 		}
@@ -41,7 +41,7 @@ public class User {
 		setFavMovies(removeMovie(favMovieName,getFavMovies()));
 	}
 	
-	private List<Movie> removeMovie(String movieName, List<Movie> movieList) throws MovieNotFoundException {
+	private List<MovieDetail> removeMovie(String movieName, List<MovieDetail> movieList) throws MovieNotFoundException {
 		if(null == movieList.stream().filter(movie -> movie.getTitle().equals(movieName)).findAny().orElse(null)) {
 			throw new MovieNotFoundException(movieName);
 		}
