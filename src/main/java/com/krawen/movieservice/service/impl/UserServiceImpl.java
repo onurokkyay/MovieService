@@ -78,16 +78,16 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	@Override
-	public void removeWatchedMovie(String userName, String watchedMovieName) throws UserNotFoundException, MovieNotFoundException {
+	public void removeWatchedMovie(String userName, int id) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
-		user.removeWatchedMovieByName(watchedMovieName);
+		user.removeWatchedMovieByName(id);
 	    userRepo.save(user);
 	}
 	
 	@Override
-	public void removeFavMovie(String userName, String favMovieName) throws UserNotFoundException, MovieNotFoundException {
+	public void removeFavMovie(String userName, int id) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
-		user.removeFavMovieByName(favMovieName);
+		user.removeFavMovieByName(id);
 	    userRepo.save(user);
 	}
 	
