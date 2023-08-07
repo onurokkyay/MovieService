@@ -1,5 +1,7 @@
 package com.krawen.movieservice.service.impl;
 
+import java.util.Objects;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import com.krawen.movieservice.dto.UserDTO;
 import com.krawen.movieservice.entity.Movie;
 import com.krawen.movieservice.entity.MovieDetail;
 import com.krawen.movieservice.entity.User;
+import com.krawen.movieservice.exception.MovieAlreadyExistException;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
@@ -68,13 +71,19 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	@Override
-	public void addFavMovie(String userName, int movieId) throws UserNotFoundException, MovieNotFoundException {
+	public void addFavMovie(String userName, int movieId) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 		User user = retrieveUserEntityByUserName(userName);
-	    ModelMapper modelMapper = new ModelMapper();
-	    MovieDetailDTO favMovie = movieService.retrieveMovieById(movieId);
-	    MovieDetail movie = modelMapper.map(favMovie,MovieDetail.class);
-	    user.getFavMovies().add(movie);
-	    userRepo.save(user);
+		if(Objects.isNull(user.getFavMovies().stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null))) {
+		    ModelMapper modelMapper = new ModelMapper();
+		    MovieDetailDTO favMovie = movieService.retrieveMovieById(movieId);
+		    MovieDetail movie = modelMapper.map(favMovie,MovieDetail.class);
+		    user.getFavMovies().add(movie);
+		    userRepo.save(user);
+		}
+		else {
+			throw new MovieAlreadyExistException(movieId);
+		}
+
 	}
 	
 	@Override

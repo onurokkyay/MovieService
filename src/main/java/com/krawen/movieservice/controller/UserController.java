@@ -14,6 +14,7 @@ import com.krawen.movieservice.aspect.Log;
 import com.krawen.movieservice.dto.AddMovieDTO;
 import com.krawen.movieservice.dto.UserDTO;
 import com.krawen.movieservice.entity.User;
+import com.krawen.movieservice.exception.MovieAlreadyExistException;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
@@ -79,6 +80,7 @@ public class UserController {
 	 * @return          The HTTP response
 	 * @throws UserNotFoundException if the user is not found
 	 * @throws MovieNotFoundException 
+	 * @throws MovieAlreadyExistException 
 	 */
 	@Operation(summary = "Add a fav movie for a user", description = "This endpoint allows you to add a movie to the fav list of a user.")
 	@ApiResponses(value = {
@@ -86,7 +88,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
     @PutMapping("/movieservice/users/{userName}/movies/favorites")
-    public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException {
+    public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
     	userService.addFavMovie(userName,movie.getId());
     	return ResponseEntity.ok("Fav movie added");
     }

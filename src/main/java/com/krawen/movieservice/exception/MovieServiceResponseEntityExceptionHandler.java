@@ -23,4 +23,10 @@ public class MovieServiceResponseEntityExceptionHandler extends ResponseEntityEx
     protected ResponseEntity<Object> handleMovieNotFoundException(MovieNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    
+    @ExceptionHandler(MovieAlreadyExistException.class)
+    protected ResponseEntity<Object> handleMovieAlreadyExistException(MovieAlreadyExistException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+    
 }
