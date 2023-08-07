@@ -60,6 +60,7 @@ public class UserController {
 	 * @return          The HTTP response
 	 * @throws UserNotFoundException if the user is not found
 	 * @throws MovieNotFoundException 
+	 * @throws MovieAlreadyExistException 
 	 */
 	@Operation(summary = "Add a watched movie for a user", description = "This endpoint allows you to add a movie to the watched list of a user.")
 	@ApiResponses(value = {
@@ -67,7 +68,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
     @PutMapping("/movieservice/users/{userName}/movies/watched")
-    public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException {
+    public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
     	userService.addWatchedMovie(userName,movie.getId());
     	return ResponseEntity.ok("Watched movie added");
     }

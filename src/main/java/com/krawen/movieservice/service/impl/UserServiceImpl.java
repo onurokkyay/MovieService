@@ -1,5 +1,6 @@
 package com.krawen.movieservice.service.impl;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
@@ -26,13 +27,13 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements IUserService {
-	
+
 	@Autowired
 	UserRepository userRepo;
-	
+
 	@Autowired
 	UserKafkaProducer userKafkaProducer;
-	
+
 	@Autowired
 	IMovieService movieService;
 
@@ -47,65 +48,72 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public User createUser(UserDTO userDTO) throws UserNameExistException {
-	    boolean isUserNameExists = userRepo.existsByUserName(userDTO.getUserName());
-	    ModelMapper modelMapper = new ModelMapper();
-	    User user = modelMapper.map(userDTO,User.class);
+		boolean isUserNameExists = userRepo.existsByUserName(userDTO.getUserName());
+		ModelMapper modelMapper = new ModelMapper();
+		User user = modelMapper.map(userDTO, User.class);
 
-	    if (isUserNameExists) {
-	        throw new UserNameExistException(user.getUserName());
-	    }
-	    user = userRepo.save(user);
-	    userKafkaProducer.sendMessage(userDTO);
-	    return user;
-		
-	}
-
-	@Override
-	public void addWatchedMovie(String userName, int movieId) throws UserNotFoundException, MovieNotFoundException {
-		User user = retrieveUserEntityByUserName(userName);
-	    ModelMapper modelMapper = new ModelMapper();
-	    MovieDetailDTO watchedMovie = movieService.retrieveMovieById(movieId);
-	    MovieDetail movie = modelMapper.map(watchedMovie,MovieDetail.class);
-	    user.getWatchedMovies().add(movie);
-	    userRepo.save(user);
-	}
-	
-	@Override
-	public void addFavMovie(String userName, int movieId) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
-		User user = retrieveUserEntityByUserName(userName);
-		if(Objects.isNull(user.getFavMovies().stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null))) {
-		    ModelMapper modelMapper = new ModelMapper();
-		    MovieDetailDTO favMovie = movieService.retrieveMovieById(movieId);
-		    MovieDetail movie = modelMapper.map(favMovie,MovieDetail.class);
-		    user.getFavMovies().add(movie);
-		    userRepo.save(user);
+		if (isUserNameExists) {
+			throw new UserNameExistException(user.getUserName());
 		}
-		else {
+		user = userRepo.save(user);
+		userKafkaProducer.sendMessage(userDTO);
+		return user;
+
+	}
+
+	@Override
+	public void addWatchedMovie(String userName, int movieId) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		User user = retrieveUserEntityByUserName(userName);
+		if (checkIsMovieExistInList(user.getWatchedMovies(), movieId)) {
 			throw new MovieAlreadyExistException(movieId);
+		} else {
+			ModelMapper modelMapper = new ModelMapper();
+			MovieDetailDTO watchedMovie = movieService.retrieveMovieById(movieId);
+			MovieDetail movie = modelMapper.map(watchedMovie, MovieDetail.class);
+			user.getWatchedMovies().add(movie);
+			userRepo.save(user);
 		}
-
 	}
-	
+
+	@Override
+	public void addFavMovie(String userName, int movieId)
+			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		User user = retrieveUserEntityByUserName(userName);
+		if (checkIsMovieExistInList(user.getFavMovies(), movieId)) {
+			throw new MovieAlreadyExistException(movieId);
+		} else {
+			ModelMapper modelMapper = new ModelMapper();
+			MovieDetailDTO favMovie = movieService.retrieveMovieById(movieId);
+			MovieDetail movie = modelMapper.map(favMovie, MovieDetail.class);
+			user.getFavMovies().add(movie);
+			userRepo.save(user);
+		}
+	}
+
 	@Override
 	public void removeWatchedMovie(String userName, int id) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
 		user.removeWatchedMovieByName(id);
-	    userRepo.save(user);
+		userRepo.save(user);
 	}
-	
+
 	@Override
 	public void removeFavMovie(String userName, int id) throws UserNotFoundException, MovieNotFoundException {
 		User user = retrieveUserEntityByUserName(userName);
 		user.removeFavMovieByName(id);
-	    userRepo.save(user);
+		userRepo.save(user);
 	}
-	
+
 	private User retrieveUserEntityByUserName(String userName) throws UserNotFoundException {
 		boolean isUserNameExists = userRepo.existsByUserName(userName);
-	    if (!isUserNameExists) {
-	        throw new UserNotFoundException(userName);
-	    }
+		if (!isUserNameExists) {
+			throw new UserNotFoundException(userName);
+		}
 		return userRepo.findByUserName(userName);
-	}	
+	}
+
+	private boolean checkIsMovieExistInList(List<MovieDetail> movieList, int movieId) {
+		return !Objects.isNull(movieList.stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null));
+	}
 
 }
