@@ -16,37 +16,37 @@ public class User {
 	private String id;
 	private String userName;
 	private String mail;
-	private List<Movie> watchedMovies;
-	private List<Movie> favMovies;
+	private List<MovieDetail> watchedMovies;
+	private List<MovieDetail> favMovies;
 	
-	public List<Movie> getWatchedMovies() {
+	public List<MovieDetail> getWatchedMovies() {
 		if (watchedMovies == null) {
 			watchedMovies = new ArrayList<>();
 		}
 		return watchedMovies;
 	}
 	
-	public List<Movie> getFavMovies() {
+	public List<MovieDetail> getFavMovies() {
 		if (favMovies == null) {
 			favMovies = new ArrayList<>();
 		}
 		return favMovies;
 	}
 	
-	public void removeWatchedMovieByName (String watchedMovieName) throws MovieNotFoundException {
-		setWatchedMovies(removeMovie(watchedMovieName,getFavMovies()));
+	public void removeWatchedMovieByName (int id) throws MovieNotFoundException {
+		setWatchedMovies(removeMovie(id,getWatchedMovies()));
 	}
 	
-	public void removeFavMovieByName (String favMovieName) throws MovieNotFoundException {
-		setFavMovies(removeMovie(favMovieName,getFavMovies()));
+	public void removeFavMovieByName (int id) throws MovieNotFoundException {
+		setFavMovies(removeMovie(id,getFavMovies()));
 	}
 	
-	private List<Movie> removeMovie(String movieName, List<Movie> movieList) throws MovieNotFoundException {
-		if(null == movieList.stream().filter(movie -> movie.getTitle().equals(movieName)).findAny().orElse(null)) {
-			throw new MovieNotFoundException(movieName);
+	private List<MovieDetail> removeMovie(int id, List<MovieDetail> movieList) throws MovieNotFoundException {
+		if(null == movieList.stream().filter(movie -> movie.getId() == id).findAny().orElse(null)) {
+			throw new MovieNotFoundException(id);
 		}
 		return movieList.stream()
-		.filter(movie -> !movie.getTitle().equals(movieName))
+		.filter(movie -> !(movie.getId() == id))
 		.collect(Collectors.toList());
 	}
 

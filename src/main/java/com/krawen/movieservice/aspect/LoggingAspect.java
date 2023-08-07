@@ -67,13 +67,13 @@ public class LoggingAspect {
     public void validationPointcut(){}
     
     @Around("validationPointcut()")
-    public void aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
     	LOGGER.info("Validation");
         //int arg = (int) joinPoint.getArgs()[0];
         //if (arg < 0)
         //    throw new RuntimeException("Argument should not be negative");
         //else
-            joinPoint.proceed();
+        return joinPoint.proceed();
     }
 
 	private void logArgs(Object[] args) {

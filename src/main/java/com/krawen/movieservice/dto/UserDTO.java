@@ -1,6 +1,8 @@
-package com.krawen.movieservice.entity;
+package com.krawen.movieservice.dto;
 
 import java.util.List;
+
+import com.krawen.movieservice.entity.Movie;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

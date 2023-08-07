@@ -10,7 +10,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import com.krawen.movieservice.config.KafkaTopicConfig;
-import com.krawen.movieservice.entity.User;
+import com.krawen.movieservice.dto.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -23,10 +23,10 @@ public class UserKafkaProducer {
 	private final static Logger LOGGER = LoggerFactory.getLogger(UserKafkaProducer.class);
 	
 	@Autowired
-	private KafkaTemplate<String, User> kafkaTemplate;
-
-	public void sendMessage(User user) {
-		Message<User> message = MessageBuilder
+	private KafkaTemplate<String, UserDTO> kafkaTemplate;
+	
+	public void sendMessage(UserDTO user) {
+		Message<UserDTO> message = MessageBuilder
 				.withPayload(user)
 				.setHeader(KafkaHeaders.TOPIC, KafkaTopicConfig.MOVIE_SERVICE_USER_TOPIC_NAME)
 				.build();

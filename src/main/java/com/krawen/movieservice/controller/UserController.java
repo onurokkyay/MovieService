@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.krawen.movieservice.aspect.Log;
-import com.krawen.movieservice.entity.MovieDTO;
+import com.krawen.movieservice.dto.AddMovieDTO;
+import com.krawen.movieservice.dto.UserDTO;
 import com.krawen.movieservice.entity.User;
-import com.krawen.movieservice.entity.UserDTO;
+import com.krawen.movieservice.exception.MovieAlreadyExistException;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
@@ -58,6 +59,8 @@ public class UserController {
 	 * @param watchedMovie  The details of the new movie
 	 * @return          The HTTP response
 	 * @throws UserNotFoundException if the user is not found
+	 * @throws MovieNotFoundException 
+	 * @throws MovieAlreadyExistException 
 	 */
 	@Operation(summary = "Add a watched movie for a user", description = "This endpoint allows you to add a movie to the watched list of a user.")
 	@ApiResponses(value = {
@@ -65,8 +68,8 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
     @PutMapping("/movieservice/users/{userName}/movies/watched")
-    public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody MovieDTO watchedMovie) throws UserNotFoundException {
-    	userService.addWatchedMovie(userName,watchedMovie);
+    public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+    	userService.addWatchedMovie(userName,movie.getId());
     	return ResponseEntity.ok("Watched movie added");
     }
 	
@@ -77,6 +80,8 @@ public class UserController {
 	 * @param favMovie  The details of the new movie
 	 * @return          The HTTP response
 	 * @throws UserNotFoundException if the user is not found
+	 * @throws MovieNotFoundException 
+	 * @throws MovieAlreadyExistException 
 	 */
 	@Operation(summary = "Add a fav movie for a user", description = "This endpoint allows you to add a movie to the fav list of a user.")
 	@ApiResponses(value = {
@@ -84,8 +89,8 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
     @PutMapping("/movieservice/users/{userName}/movies/favorites")
-    public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody MovieDTO favMovie) throws UserNotFoundException {
-    	userService.addFavMovie(userName,favMovie);
+    public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+    	userService.addFavMovie(userName,movie.getId());
     	return ResponseEntity.ok("Fav movie added");
     }
 	
@@ -103,11 +108,11 @@ public class UserController {
 	        @ApiResponse(responseCode = "200", description = "Watched movie deleted"),
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
-	@DeleteMapping("/movieservice/users/{userName}/movies/watched/{movieName}")
+	@DeleteMapping("/movieservice/users/{userName}/movies/watched/{id}")
 	public ResponseEntity<?> removeMovieFromWatchedMovies(
 	        @PathVariable("userName") String userName,
-	        @PathVariable("movieName") String movieName) throws UserNotFoundException, MovieNotFoundException {
-	    userService.removeWatchedMovie(userName, movieName);
+	        @PathVariable("id") int id) throws UserNotFoundException, MovieNotFoundException {
+	    userService.removeWatchedMovie(userName, id);
 	    return ResponseEntity.ok("Watched movie deleted");
 	}
     
@@ -125,11 +130,11 @@ public class UserController {
 	        @ApiResponse(responseCode = "200", description = "Watched movie deleted"),
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
-    @DeleteMapping("/movieservice/users/{userName}/movies/favorites/{movieName}")
+    @DeleteMapping("/movieservice/users/{userName}/movies/favorites/{id}")
     public ResponseEntity<?>  removeMovieFromFavMovies(
             @PathVariable("userName") String userName,
-            @PathVariable("movieName") String movieName) throws UserNotFoundException, MovieNotFoundException {
-        userService.removeFavMovie(userName, movieName);
+            @PathVariable("id") int id) throws UserNotFoundException, MovieNotFoundException {
+        userService.removeFavMovie(userName, id);
         return ResponseEntity.ok("Fav movie deleted");
     }
     

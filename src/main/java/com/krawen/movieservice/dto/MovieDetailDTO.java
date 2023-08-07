@@ -1,6 +1,9 @@
-package com.krawen.movieservice.entity;
+package com.krawen.movieservice.dto;
 
 import java.time.LocalDate;
+
+import com.krawen.movieservice.entity.BelongsToCollection;
+import com.krawen.movieservice.entity.Genre;
 
 import lombok.Data;
 

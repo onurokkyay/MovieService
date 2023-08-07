@@ -7,18 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetail;
-import com.krawen.movieservice.entity.MovieDetailDTO;
 import com.krawen.movieservice.entity.RetrieveGenresResponse;
-import com.krawen.movieservice.entity.SearchMovieResponseDTO;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.mapper.ExternalMovieServiceMapper;
 import com.krawen.movieservice.external.service.IExternalMovieService;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
@@ -28,91 +31,84 @@ import com.krawen.movieservice.properties.MovieServiceProperties;
 
 @Service
 public class ExternalMovieServiceImpl implements IExternalMovieService {
-	
-	//@Autowired
-	//RestTemplate restTemplate;
-	
+
+	@Autowired
+	RestTemplate restTemplate;
+
 	@Autowired
 	private MovieKafkaProducer kafkaProducer;
-	
+
 	@Autowired
 	MovieServiceProperties movieServiceProperties;
 
-	private HttpHeaders createHttpHeaders()
-	{
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_JSON);
-	    headers.add("Authorization","Bearer "+movieServiceProperties.getMovieApiBearerToken());
-	    return headers;
+	private final String baseUrl = "https://api.themoviedb.org/3";
+
+	private HttpHeaders createHttpHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("Authorization", "Bearer " + movieServiceProperties.getMovieApiBearerToken());
+		return headers;
 	}
 
 	@Override
-	public MovieDetailDTO retrieveMovieById(int movieId) {
-		RestTemplate restTemplate = new RestTemplate();
+	public MovieDetailDTO retrieveMovieById(int movieId) throws MovieNotFoundException {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
-		
+
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-	    ResponseEntity<MovieDetail> response = restTemplate.exchange("https://api.themoviedb.org/3/movie/"+movieId, HttpMethod.GET, entity, MovieDetail.class);
-	    MovieDetailDTO movie = extMovieServiceMapper.mapToMovieDetailDTO(response.getBody());
+		ResponseEntity<MovieDetail> response = null;
+		try {
+			response = restTemplate.exchange(baseUrl + "/movie/" + movieId, HttpMethod.GET, entity, MovieDetail.class);
+		} catch (HttpClientErrorException e) {
+			if (HttpStatus.NOT_FOUND.equals(e.getStatusCode())) {
+				throw new MovieNotFoundException(movieId);
+			}
+		}
+
+		MovieDetailDTO movie = extMovieServiceMapper.mapToMovieDetailDTO(response.getBody());
 		return movie;
 	}
-	
+
 	@Override
 	public SearchMovieResponseDTO searchMovie(SearchMovieRequest request) {
-		kafkaProducer.sendMessage(String.format("Movie searched by name: %s " ,request.getQuery()));
-		RestTemplate restTemplate = new RestTemplate();
+		kafkaProducer.sendMessage(String.format("Movie searched by name: %s ", request.getQuery()));
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
-
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/discover/movie")
-				.queryParam("query", request.getQuery())
-				.queryParam("page", request.getPage())
-				.queryParam("include_adult", request.isIncludeAdult())
-				.build()
-				.toUri();
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/search/movie")
+				.queryParam("query", request.getQuery()).queryParam("page", request.getPage())
+				.queryParam("include_adult", request.isIncludeAdult()).build().toUri();
 
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
 
-		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
-				SearchMovieResponse.class);
+		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity, SearchMovieResponse.class);
 
-		SearchMovieResponseDTO movies = extMovieServiceMapper
-				.mapToSearchMovieByNameResponseDTO(response.getBody());
+		SearchMovieResponseDTO movies = extMovieServiceMapper.mapToSearchMovieByNameResponseDTO(response.getBody());
 		return movies;
- 
+
 	}
-	
+
 	@Override
 	public SearchMovieResponseDTO retrievePopularMovies(int page) {
-		RestTemplate restTemplate = new RestTemplate();
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/popular")
-				.queryParam("page", page)
-				.build()
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/movie/popular").queryParam("page", page).build()
 				.toUri();
 
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
 
-		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
-				SearchMovieResponse.class);
+		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity, SearchMovieResponse.class);
 
-		SearchMovieResponseDTO movies = extMovieServiceMapper
-				.mapToSearchMovieByNameResponseDTO(response.getBody());
+		SearchMovieResponseDTO movies = extMovieServiceMapper.mapToSearchMovieByNameResponseDTO(response.getBody());
 		return movies;
- 
+
 	}
-	
+
 	@Override
 	public List<Genre> retrieveGenres() {
-		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = createHttpHeaders();
-		
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/genre/movie/list")
-				.build()
-				.toUri();
+
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/genre/movie/list").build().toUri();
 
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
 
@@ -121,27 +117,22 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 
 		return response.getBody().getGenres();
 	}
-	
+
 	@Override
-	public SearchMovieResponseDTO discoverMovie(String withGenres) {
-		RestTemplate restTemplate = new RestTemplate();
+	public SearchMovieResponseDTO discoverMovie(String withGenres, int page) {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl("https://api.themoviedb.org/3/movie/popular")
-				.queryParam("with_genres", withGenres)
-				.build()
-				.toUri();
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/discover/movie")
+				.queryParam("with_genres", withGenres).queryParam("page", page).build().toUri();
 
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
 
-		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity,
-				SearchMovieResponse.class);
+		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity, SearchMovieResponse.class);
 
-		SearchMovieResponseDTO movies = extMovieServiceMapper
-				.mapToSearchMovieByNameResponseDTO(response.getBody());
+		SearchMovieResponseDTO movies = extMovieServiceMapper.mapToSearchMovieByNameResponseDTO(response.getBody());
 		return movies;
- 
+
 	}
 
 }
