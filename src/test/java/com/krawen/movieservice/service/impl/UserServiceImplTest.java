@@ -61,7 +61,7 @@ class UserServiceImplTest {
         userService = new UserServiceImpl(userRepo, userKafkaProducer, movieService);
     }
 
-	 @Test
+	 	@Test
 	    public void testCreateUserSuccess() throws UserNameExistException {
 
 	        when(userRepo.existsByUserName(userDTO.getUserName())).thenReturn(false);
@@ -90,7 +90,7 @@ class UserServiceImplTest {
 	        verify(userKafkaProducer, times(0)).sendMessage(any(UserDTO.class));
 	    }
 	    
-		 @Test
+		 	@Test
 		    public void testRetrieveUserSuccess() throws UserNotFoundException {
 
 		        when(userRepo.existsByUserName(testUsername)).thenReturn(true);
@@ -118,7 +118,7 @@ class UserServiceImplTest {
 		    }
 		    
 		    @Test
-		    public void testShouldAddWatchedMovieSuccessfully() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		    public void testdAddWatchedMovieSuccessfully() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 
 		        when(userRepo.existsByUserName(userDTO.getUserName())).thenReturn(true);
 		        
@@ -133,7 +133,7 @@ class UserServiceImplTest {
 		    }
 		    
 		    @Test
-		    public void testShouldAddWatchedMovieMovieAlreadyExistException() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		    public void testAddWatchedMovieMovieAlreadyExistException() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 
 		        user.getWatchedMovies().add(movieDetail);
 		        when(userRepo.existsByUserName(userDTO.getUserName())).thenReturn(true);
@@ -141,6 +141,33 @@ class UserServiceImplTest {
 		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
 
 		        assertThrows(MovieAlreadyExistException.class, () ->  userService.addWatchedMovie(testUsername, movieId));
+
+		    }
+		    
+		    @Test
+		    public void testAddFavMovieSuccessfully() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+
+		        when(userRepo.existsByUserName(userDTO.getUserName())).thenReturn(true);
+		        
+		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
+		        
+		        when(movieService.retrieveMovieById(movieId)).thenReturn(movieDetailDto);
+		        
+		        userService.addFavMovie(testUsername, movieId);
+		        
+		        assertNotNull(user.getFavMovies().stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null));
+
+		    }
+		    
+		    @Test
+		    public void testAddFavMovieMovieAlreadyExistException() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+
+		        user.getFavMovies().add(movieDetail);
+		        when(userRepo.existsByUserName(userDTO.getUserName())).thenReturn(true);
+		        
+		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
+
+		        assertThrows(MovieAlreadyExistException.class, () ->  userService.addFavMovie(testUsername, movieId));
 
 		    }
 
