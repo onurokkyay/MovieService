@@ -2,8 +2,10 @@ package com.krawen.movieservice.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -170,5 +172,33 @@ class UserServiceImplTest {
 		        assertThrows(MovieAlreadyExistException.class, () ->  userService.addFavMovie(testUsername, movieId));
 
 		    }
+		    
+		    @Test
+		    public void testDeleteWatchedMovieSuccessfully() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		    	
+		    	user.getWatchedMovies().add(movieDetail);
+		    	
+		        when(userRepo.existsByUserName(userDTO.getUserName())).thenReturn(true);
+		        
+		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
+		        
+		        userService.removeWatchedMovie(user.getUserName(),movieId);
 
+		        assertNull(user.getWatchedMovies().stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null));
+		    }
+		    
+		    @Test
+		    public void testDeleteFavMovieSuccessfully() throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		    	
+		    	user.getFavMovies().add(movieDetail);
+		    	
+		        when(userRepo.existsByUserName(userDTO.getUserName())).thenReturn(true);
+		        
+		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
+		        
+		        userService.removeFavMovie(user.getUserName(),movieId);
+
+		        assertNull(user.getFavMovies().stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null));
+		    }
+		    
 }
