@@ -2,6 +2,8 @@ package com.krawen.movieservice.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +16,11 @@ import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
+import com.krawen.movieservice.dto.AddMovieDTO;
 import com.krawen.movieservice.dto.UserDTO;
 import com.krawen.movieservice.entity.User;
+import com.krawen.movieservice.exception.MovieAlreadyExistException;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.exception.UserNameExistException;
 import com.krawen.movieservice.exception.UserNotFoundException;
 import com.krawen.movieservice.service.IUserService;
@@ -32,13 +37,18 @@ class UserControllerTest {
 	UserDTO userDto;
 	User user;
 	String testUserName = "testUserName";
+	AddMovieDTO addMovieDto;
+	int movieId = 1;
+	String userId = "1";
 
 	@BeforeEach
 	void setup() {
 		userDto = new UserDTO();
 		user = new User();
-		user.setId("1");
+		user.setId(userId);
 		userDto.setUserName(testUserName);
+		addMovieDto = new AddMovieDTO();
+		addMovieDto.setId(1);
 	}
 
 	@Test
@@ -63,6 +73,28 @@ class UserControllerTest {
 	public void testCreateUserUserNameExistException() throws UserNameExistException {
 		when(userService.createUser(userDto)).thenThrow(UserNameExistException.class);
 		assertThrows(UserNameExistException.class, ()-> userController.createUser(userDto));
+	}
+
+	@Test
+	public void testAddWatchedMovieSuccess()
+			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		doNothing().when(userService).addWatchedMovie(testUserName, movieId);
+		assertEquals(HttpStatus.OK.value(),
+				userController.addWatchedMovie(testUserName, addMovieDto).getStatusCode().value());
+	}
+
+	@Test
+	public void testAddWatchedMovieMovieNotFoundException()
+			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		doThrow(new MovieNotFoundException(movieId)).when(userService).addWatchedMovie(testUserName, movieId);
+		assertThrows(MovieNotFoundException.class, () -> userController.addWatchedMovie(testUserName, addMovieDto));
+	}
+
+	@Test
+	public void testAddWatchedMovieUserNotFoundException()
+			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		doThrow(new UserNotFoundException(testUserName)).when(userService).addWatchedMovie(testUserName, movieId);
+		assertThrows(UserNotFoundException.class, () -> userController.addWatchedMovie(testUserName, addMovieDto));
 	}
 
 }
