@@ -137,5 +137,24 @@ class UserControllerTest {
 		doThrow(new MovieNotFoundException(movieId)).when(userService).removeWatchedMovie(testUserName, movieId);
 		assertThrows(MovieNotFoundException.class, () -> userController.removeMovieFromWatchedMovies(testUserName, movieId));
 	}
+	
+	@Test
+	public void testRemoveMovieFromFavMovies() throws UserNotFoundException, MovieNotFoundException {
+		doNothing().when(userService).removeFavMovie(testUserName, movieId);
+		assertEquals(HttpStatus.OK.value(),
+				userController.removeMovieFromFavMovies(testUserName, movieId).getStatusCode().value());		
+	}
+	
+	@Test
+	public void testRemoveMovieFromFavMoviesUserNotFoundException() throws UserNotFoundException, MovieNotFoundException {
+		doThrow(new UserNotFoundException(testUserName)).when(userService).removeFavMovie(testUserName, movieId);
+		assertThrows(UserNotFoundException.class, () -> userController.removeMovieFromFavMovies(testUserName, movieId));
+	}
+	
+	@Test
+	public void testRemoveMovieFromFavMoviesMovieNotFoundException() throws UserNotFoundException, MovieNotFoundException {
+		doThrow(new MovieNotFoundException(movieId)).when(userService).removeFavMovie(testUserName, movieId);
+		assertThrows(MovieNotFoundException.class, () -> userController.removeMovieFromFavMovies(testUserName, movieId));
+	}
 
 }
