@@ -96,5 +96,27 @@ class UserControllerTest {
 		doThrow(new UserNotFoundException(testUserName)).when(userService).addWatchedMovie(testUserName, movieId);
 		assertThrows(UserNotFoundException.class, () -> userController.addWatchedMovie(testUserName, addMovieDto));
 	}
+	
+	@Test
+	public void testAddFavMovieSuccess()
+			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		doNothing().when(userService).addFavMovie(testUserName, movieId);
+		assertEquals(HttpStatus.OK.value(),
+				userController.addFavMovie(testUserName, addMovieDto).getStatusCode().value());
+	}
+
+	@Test
+	public void testAddFavMovieMovieNotFoundException()
+			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		doThrow(new MovieNotFoundException(movieId)).when(userService).addFavMovie(testUserName, movieId);
+		assertThrows(MovieNotFoundException.class, () -> userController.addFavMovie(testUserName, addMovieDto));
+	}
+
+	@Test
+	public void testAddFavMovieUserNotFoundException()
+			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+		doThrow(new UserNotFoundException(testUserName)).when(userService).addFavMovie(testUserName, movieId);
+		assertThrows(UserNotFoundException.class, () -> userController.addFavMovie(testUserName, addMovieDto));
+	}
 
 }
