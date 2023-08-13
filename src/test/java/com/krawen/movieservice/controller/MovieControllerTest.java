@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -72,6 +74,12 @@ class MovieControllerTest {
 	void testDiscoverMovieSuccess() {
 		when(movieService.discoverMovie(genres, page)).thenReturn(searchMovieResponseDto);
 		assertNotNull(movieController.discoverMovie(page,genres));
+	}
+	
+	@Test
+	void testRetrieveGenresSuccess() {
+		when(movieService.retrieveGenres()).thenReturn(new ArrayList<>());
+		assertNotNull(movieController.retrieveGenres());
 	}
 
 }
