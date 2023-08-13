@@ -34,6 +34,7 @@ class MovieControllerTest {
 	boolean isAdult = false;
 	int movieId = 1;
 	MovieDetailDTO movieDetailDto;
+	String genres = "testGenre";
 
 	@BeforeEach
 	void setup() {
@@ -65,6 +66,12 @@ class MovieControllerTest {
 	void testRetrievePopularMoviesSuccess() {
 		when(movieService.retrievePopularMovies(page)).thenReturn(searchMovieResponseDto);
 		assertNotNull(movieController.retrievePopularMovies(page));
+	}
+	
+	@Test
+	void testDiscoverMovieSuccess() {
+		when(movieService.discoverMovie(genres, page)).thenReturn(searchMovieResponseDto);
+		assertNotNull(movieController.discoverMovie(page,genres));
 	}
 
 }
