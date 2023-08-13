@@ -1,6 +1,8 @@
 package com.krawen.movieservice.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.service.IMovieService;
 
@@ -28,18 +32,33 @@ class MovieControllerTest {
 	String movieName = "testMovieName";
 	int page = 1;
 	boolean isAdult = false;
+	int movieId = 1;
+	MovieDetailDTO movieDetailDto;
 
 	@BeforeEach
 	void setup() {
 		searchMovieResponseDto = new SearchMovieResponseDTO();
 		searchMovieRequest = new SearchMovieRequest(movieName, isAdult, page);
+		movieDetailDto = new MovieDetailDTO();
+		movieDetailDto.setId(movieId);
 	}
 
 	@Test
-	void testRetrieveMovieByIdSuccess() {
+	void testSearchMovieByIdSuccess() {
 		when(movieService.searchMovie(searchMovieRequest)).thenReturn(searchMovieResponseDto);
 		assertNotNull(movieController.searchMovie(movieName, isAdult, page));
-		
+	}
+	
+	@Test
+	void testRetrieveMovieByIdSuccess() throws MovieNotFoundException {
+		when(movieService.retrieveMovieById(movieId)).thenReturn(movieDetailDto);
+		assertEquals(movieId, movieController.retrieveMovieById(movieId).getId());
+	}
+	
+	@Test
+	void testRetrieveMovieByIdMovieNotFoundException() throws MovieNotFoundException {
+		when(movieService.retrieveMovieById(movieId)).thenThrow(MovieNotFoundException.class);
+		assertThrows(MovieNotFoundException.class, () -> movieController.retrieveMovieById(movieId));
 	}
 
 }
