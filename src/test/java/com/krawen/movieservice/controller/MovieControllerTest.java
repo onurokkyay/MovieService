@@ -60,5 +60,11 @@ class MovieControllerTest {
 		when(movieService.retrieveMovieById(movieId)).thenThrow(MovieNotFoundException.class);
 		assertThrows(MovieNotFoundException.class, () -> movieController.retrieveMovieById(movieId));
 	}
+	
+	@Test
+	void testRetrievePopularMoviesSuccess() {
+		when(movieService.retrievePopularMovies(page)).thenReturn(searchMovieResponseDto);
+		assertNotNull(movieController.retrievePopularMovies(page));
+	}
 
 }
