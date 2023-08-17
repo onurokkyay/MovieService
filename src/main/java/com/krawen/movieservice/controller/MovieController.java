@@ -18,6 +18,7 @@ import com.krawen.movieservice.service.IMovieService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -104,8 +105,15 @@ public class MovieController {
 		return movieService.discoverMovie(withGenres,page);
 	}
 	
-	@GetMapping("movieservice/people/trending")
-	public SearchPersonResponseDTO retrieveTrendingPeople(@RequestParam(defaultValue = "day") String timeWindow) {
+	@GetMapping("/movieservice/person/trending")
+	@Operation(summary = "Retrieves a list of trending people based on the specified time window.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of trending people"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    })
+	public SearchPersonResponseDTO retrieveTrendingPeople( 
+	@Parameter(description = "Time window for retrieveTrendingPeople. Possible values: 'day', 'week'", schema = @Schema(allowableValues = {"day", "week"}))
+    @RequestParam(defaultValue = "day") String timeWindow) {
 		return movieService.retrieveTrendingPeople(timeWindow);
 	}
 }
