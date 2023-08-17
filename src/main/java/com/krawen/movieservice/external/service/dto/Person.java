@@ -1,6 +1,9 @@
 package com.krawen.movieservice.external.service.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.krawen.movieservice.entity.Movie;
 
 import lombok.Data;
 
@@ -19,5 +22,6 @@ public class Person {
     private String knownForDepartment;
     @JsonProperty("profile_path")
     private String profilePath;
-    //private List<KnownFor> knownFor;
+    @JsonProperty("known_for")
+    private List<Movie> movieList;
 }

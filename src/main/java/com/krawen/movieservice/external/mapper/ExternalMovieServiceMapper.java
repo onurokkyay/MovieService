@@ -43,12 +43,18 @@ public class ExternalMovieServiceMapper {
 		});
 		return searchMovie;
 	}
-	
+
 	public SearchPersonResponseDTO mapToSearchPeopleResponseDTO(SearchPersonResponse response) {
 		ModelMapper modelMapper = new ModelMapper();
 		SearchPersonResponseDTO searchPersonResponseDto = modelMapper.map(response, SearchPersonResponseDTO.class);
 		searchPersonResponseDto.getPersonList().stream().forEach(person -> {
 			person.setProfilePath(addImagePath(person.getProfilePath()));
+		});
+		searchPersonResponseDto.getPersonList().stream().forEach(person -> {
+			person.getMovieList().stream().forEach(movie -> {
+				movie.setBackdropPath(addImagePath(movie.getBackdropPath()));
+				movie.setPosterPath(addImagePath(movie.getPosterPath()));
+			});
 		});
 		return searchPersonResponseDto;
 	}

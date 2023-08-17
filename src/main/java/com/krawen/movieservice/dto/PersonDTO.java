@@ -1,5 +1,7 @@
 package com.krawen.movieservice.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -13,5 +15,5 @@ public class PersonDTO {
     private long gender;
     private String knownForDepartment;
     private String profilePath;
-    //private List<KnownFor> knownFor;
+    private List<MovieDTO> movieList;
 }
