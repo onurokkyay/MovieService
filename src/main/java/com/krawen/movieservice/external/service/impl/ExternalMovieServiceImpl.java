@@ -18,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
+import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetail;
 import com.krawen.movieservice.entity.RetrieveGenresResponse;
@@ -26,6 +27,7 @@ import com.krawen.movieservice.external.mapper.ExternalMovieServiceMapper;
 import com.krawen.movieservice.external.service.IExternalMovieService;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
+import com.krawen.movieservice.external.service.dto.SearchPersonResponse;
 import com.krawen.movieservice.kafka.MovieKafkaProducer;
 import com.krawen.movieservice.properties.MovieServiceProperties;
 
@@ -43,7 +45,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 
 	private final String baseUrl = "https://api.themoviedb.org/3";
 
-	private HttpHeaders createHttpHeaders() {
+	HttpHeaders createHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Authorization", "Bearer " + movieServiceProperties.getMovieApiBearerToken());
@@ -131,6 +133,23 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ResponseEntity<SearchMovieResponse> response = restTemplate.exchange(requestEntity, SearchMovieResponse.class);
 
 		SearchMovieResponseDTO movies = extMovieServiceMapper.mapToSearchMovieByNameResponseDTO(response.getBody());
+		return movies;
+
+	}
+	
+	@Override
+	public SearchPersonResponseDTO retrieveTrendingPeople(String timeWindow) {
+		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
+		HttpHeaders headers = createHttpHeaders();
+
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/trending/person/"+timeWindow).build()
+				.toUri();
+	
+		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
+		ResponseEntity<SearchPersonResponse> response = restTemplate.exchange(requestEntity, SearchPersonResponse.class);
+
+		SearchPersonResponseDTO movies = extMovieServiceMapper.mapToSearchPeopleResponseDTO(response.getBody());
 		return movies;
 
 	}

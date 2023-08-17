@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
+import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
@@ -17,6 +18,7 @@ import com.krawen.movieservice.service.IMovieService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -101,5 +103,17 @@ public class MovieController {
 			@RequestParam(defaultValue = "1") int page,
 			@Parameter(name = "withGenres", description = "A string specifying the genres to be used for movie discovery.", example = "Action,Adventure") String withGenres) {
 		return movieService.discoverMovie(withGenres,page);
+	}
+	
+	@GetMapping("/movieservice/person/trending")
+	@Operation(summary = "Retrieves a list of trending people based on the specified time window.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of trending people"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    })
+	public SearchPersonResponseDTO retrieveTrendingPeople( 
+	@Parameter(description = "Time window for retrieveTrendingPeople. Possible values: 'day', 'week'", schema = @Schema(allowableValues = {"day", "week"}))
+    @RequestParam(defaultValue = "day") String timeWindow) {
+		return movieService.retrieveTrendingPeople(timeWindow);
 	}
 }

@@ -6,8 +6,10 @@ import org.modelmapper.ModelMapper;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
+import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.MovieDetail;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
+import com.krawen.movieservice.external.service.dto.SearchPersonResponse;
 
 import io.micrometer.common.util.StringUtils;
 
@@ -40,6 +42,21 @@ public class ExternalMovieServiceMapper {
 			movie.setPosterPath(addImagePath(movie.getPosterPath()));
 		});
 		return searchMovie;
+	}
+
+	public SearchPersonResponseDTO mapToSearchPeopleResponseDTO(SearchPersonResponse response) {
+		ModelMapper modelMapper = new ModelMapper();
+		SearchPersonResponseDTO searchPersonResponseDto = modelMapper.map(response, SearchPersonResponseDTO.class);
+		searchPersonResponseDto.getPersonList().stream().forEach(person -> {
+			person.setProfilePath(addImagePath(person.getProfilePath()));
+		});
+		searchPersonResponseDto.getPersonList().stream().forEach(person -> {
+			person.getMovieList().stream().forEach(movie -> {
+				movie.setBackdropPath(addImagePath(movie.getBackdropPath()));
+				movie.setPosterPath(addImagePath(movie.getPosterPath()));
+			});
+		});
+		return searchPersonResponseDto;
 	}
 
 	private String addImagePath(String path) {
