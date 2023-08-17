@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
+import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
@@ -14,4 +15,5 @@ public interface IMovieService {
 	SearchMovieResponseDTO retrievePopularMovies(int page);
 	List<Genre> retrieveGenres();
 	SearchMovieResponseDTO discoverMovie(String withGenres, int page);
+	SearchPersonResponseDTO retrieveTrendingPeople(String timeWindow);
 }

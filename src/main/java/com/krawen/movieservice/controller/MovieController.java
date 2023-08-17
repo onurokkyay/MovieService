@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
+import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
@@ -101,5 +102,10 @@ public class MovieController {
 			@RequestParam(defaultValue = "1") int page,
 			@Parameter(name = "withGenres", description = "A string specifying the genres to be used for movie discovery.", example = "Action,Adventure") String withGenres) {
 		return movieService.discoverMovie(withGenres,page);
+	}
+	
+	@GetMapping("movieservice/people/trending")
+	public SearchPersonResponseDTO retrieveTrendingPeople(@RequestParam(defaultValue = "day") String timeWindow) {
+		return movieService.retrieveTrendingPeople(timeWindow);
 	}
 }
