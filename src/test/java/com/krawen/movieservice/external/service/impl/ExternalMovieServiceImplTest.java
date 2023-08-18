@@ -53,6 +53,18 @@ class ExternalMovieServiceImplTest {
 	}
 	
 	@Test
+    void testRetrievePopularMoviesSuccess() {
+    	
+        when(restTemplate.exchange(
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<SearchMovieResponse>>any()))
+             .thenReturn(searchMovieResponseEntity);
+
+        SearchMovieResponseDTO retrievePopularMoviesResponse = extMovieService.retrievePopularMovies(page);
+        assertEquals(retrievePopularMoviesResponse.getPage(), searchMovieResponseEntity.getBody().getPage());
+    }
+	
+	@Test
     void testDiscoverMovieSuccess() {
     	
         when(restTemplate.exchange(
