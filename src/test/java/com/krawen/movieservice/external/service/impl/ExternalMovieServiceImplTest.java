@@ -1,8 +1,11 @@
 package com.krawen.movieservice.external.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,9 @@ import org.springframework.web.client.RestTemplate;
 import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
+import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetail;
+import com.krawen.movieservice.entity.RetrieveGenresResponse;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
@@ -38,7 +43,7 @@ class ExternalMovieServiceImplTest {
 
 	@Mock
 	MovieServiceProperties movieServiceProperties;
-	
+
 	@Mock
 	MovieKafkaProducer kafkaProducer;
 
@@ -49,12 +54,17 @@ class ExternalMovieServiceImplTest {
 	ResponseEntity<MovieDetail> retrieveMovieByIdResponseEntity;
 	MovieDetail retrieveMovieByIdResponse;
 	final String imagePath = "https://image.tmdb.org/t/p/w500/";
-
+	ResponseEntity<RetrieveGenresResponse> retrieveGenresResponseEntity;
+	RetrieveGenresResponse retrieveGenresResponse;
 	String timeWindow = "day";
 	int page = 1;
-	String withGenres="Action";
-	String movieName="TestMovieName";
+	String withGenres = "Action";
+	String movieName = "TestMovieName";
 	int movieId = 1;
+	Long genreId = 1L;
+	String genreName = "Action";
+	Genre testGenre;
+
 	@BeforeEach
 	void setup() {
 		searchPersonResponse = new SearchPersonResponse();
@@ -64,12 +74,19 @@ class ExternalMovieServiceImplTest {
 		searchMovieResponse = new SearchMovieResponse();
 		searchMovieResponse.setPage(1L);
 		searchMovieResponseEntity = new ResponseEntity<SearchMovieResponse>(searchMovieResponse, HttpStatus.OK);
-		retrieveMovieByIdResponse = new  MovieDetail();
+		retrieveMovieByIdResponse = new MovieDetail();
 		retrieveMovieByIdResponse.setTitle(movieName);
 		retrieveMovieByIdResponse.setBackdropPath("testPath");
 		retrieveMovieByIdResponseEntity = new ResponseEntity<MovieDetail>(retrieveMovieByIdResponse, HttpStatus.OK);
+		retrieveGenresResponse = new RetrieveGenresResponse();
+		testGenre = new Genre();
+		testGenre.setId(genreId);
+		testGenre.setName(genreName);
+		retrieveGenresResponse.setGenres(List.of(testGenre));
+		retrieveGenresResponseEntity = new ResponseEntity<RetrieveGenresResponse>(retrieveGenresResponse,
+				HttpStatus.OK);
 	}
-	
+
 	@Test
     void testRetrieveMovieByIdSuccess() throws MovieNotFoundException {
     	
@@ -83,7 +100,7 @@ class ExternalMovieServiceImplTest {
         MovieDetailDTO retrieveMovieByIdResponseDto = extMovieService.retrieveMovieById(movieId);
         assertEquals(retrieveMovieByIdResponseDto.getTitle(), retrieveMovieByIdResponseEntity.getBody().getTitle());
     }
-	
+
 	@Test
     void testRetrieveMovieByIdMovieNotFoundException() throws MovieNotFoundException {
     	
@@ -96,7 +113,7 @@ class ExternalMovieServiceImplTest {
 
         assertThrows(MovieNotFoundException.class, () -> extMovieService.retrieveMovieById(movieId));
     }
-	
+
 	@Test
     void testSearchMovieSuccess() {
     	
@@ -108,7 +125,7 @@ class ExternalMovieServiceImplTest {
         SearchMovieResponseDTO searchMovieResponseDto = extMovieService.searchMovie(new SearchMovieRequest(movieName, false, page));
         assertEquals(searchMovieResponseDto.getPage(), searchMovieResponseEntity.getBody().getPage());
     }
-	
+
 	@Test
     void testRetrievePopularMoviesSuccess() {
     	
@@ -120,7 +137,21 @@ class ExternalMovieServiceImplTest {
         SearchMovieResponseDTO retrievePopularMoviesResponseDto = extMovieService.retrievePopularMovies(page);
         assertEquals(retrievePopularMoviesResponseDto.getPage(), searchMovieResponseEntity.getBody().getPage());
     }
-	
+
+	@Test
+	void testRetrieveGenresSuccess() {
+		when(restTemplate.exchange(
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<RetrieveGenresResponse>>any()))
+             .thenReturn(retrieveGenresResponseEntity);
+		
+		List<Genre> genreListResponse = extMovieService.retrieveGenres();
+		System.out.println(genreListResponse);
+		Genre testGenre = genreListResponse.stream().filter(genre -> genreId.equals(genre.getId())).findFirst().orElse(null);
+		System.out.println(testGenre);
+		assertNotNull(testGenre);
+	}
+
 	@Test
     void testDiscoverMovieSuccess() {
     	
