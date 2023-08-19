@@ -1,16 +1,14 @@
 package com.krawen.movieservice.dto;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
 @Data
 public class SearchMovieResponseDTO {
     private Long page;
-    @JsonProperty("results")
-    private List<MovieDTO> movies;
+    private final List<MovieDTO> movies = new ArrayList<MovieDTO>();;
     private Long totalPages;
     private Long totalResults;
 }
