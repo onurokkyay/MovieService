@@ -10,13 +10,15 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
+import com.krawen.movieservice.entity.MovieDetail;
+import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
 import com.krawen.movieservice.external.service.dto.SearchPersonResponse;
@@ -42,11 +44,15 @@ class ExternalMovieServiceImplTest {
 	SearchPersonResponse searchPersonResponse;
 	ResponseEntity<SearchMovieResponse> searchMovieResponseEntity;
 	SearchMovieResponse searchMovieResponse;
+	ResponseEntity<MovieDetail> retrieveMovieByIdResponseEntity;
+	MovieDetail retrieveMovieByIdResponse;
+	final String imagePath = "https://image.tmdb.org/t/p/w500/";
 
 	String timeWindow = "day";
 	int page = 1;
 	String withGenres="Action";
 	String movieName="TestMovieName";
+	int movieId = 1;
 	@BeforeEach
 	void setup() {
 		searchPersonResponse = new SearchPersonResponse();
@@ -56,7 +62,25 @@ class ExternalMovieServiceImplTest {
 		searchMovieResponse = new SearchMovieResponse();
 		searchMovieResponse.setPage(1L);
 		searchMovieResponseEntity = new ResponseEntity<SearchMovieResponse>(searchMovieResponse, HttpStatus.OK);
+		retrieveMovieByIdResponse = new  MovieDetail();
+		retrieveMovieByIdResponse.setTitle(movieName);
+		retrieveMovieByIdResponse.setBackdropPath("testPath");
+		retrieveMovieByIdResponseEntity = new ResponseEntity<MovieDetail>(retrieveMovieByIdResponse, HttpStatus.OK);
 	}
+	
+	@Test
+    void testRetrieveMovieByIdSuccess() throws MovieNotFoundException {
+    	
+        when(restTemplate.exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<MovieDetail>>any()))
+             .thenReturn(retrieveMovieByIdResponseEntity);
+
+        MovieDetailDTO retrieveMovieByIdResponseDto = extMovieService.retrieveMovieById(movieId);
+        assertEquals(retrieveMovieByIdResponseDto.getTitle(), retrieveMovieByIdResponseEntity.getBody().getTitle());
+    }
 	
 	@Test
     void testSearchMovieSuccess() {
@@ -66,8 +90,8 @@ class ExternalMovieServiceImplTest {
                 ArgumentMatchers.<Class<SearchMovieResponse>>any()))
              .thenReturn(searchMovieResponseEntity);
 
-        SearchMovieResponseDTO searchMovieResponse = extMovieService.searchMovie(new SearchMovieRequest(movieName, false, page));
-        assertEquals(searchMovieResponse.getPage(), searchMovieResponseEntity.getBody().getPage());
+        SearchMovieResponseDTO searchMovieResponseDto = extMovieService.searchMovie(new SearchMovieRequest(movieName, false, page));
+        assertEquals(searchMovieResponseDto.getPage(), searchMovieResponseEntity.getBody().getPage());
     }
 	
 	@Test
@@ -78,8 +102,8 @@ class ExternalMovieServiceImplTest {
                 ArgumentMatchers.<Class<SearchMovieResponse>>any()))
              .thenReturn(searchMovieResponseEntity);
 
-        SearchMovieResponseDTO retrievePopularMoviesResponse = extMovieService.retrievePopularMovies(page);
-        assertEquals(retrievePopularMoviesResponse.getPage(), searchMovieResponseEntity.getBody().getPage());
+        SearchMovieResponseDTO retrievePopularMoviesResponseDto = extMovieService.retrievePopularMovies(page);
+        assertEquals(retrievePopularMoviesResponseDto.getPage(), searchMovieResponseEntity.getBody().getPage());
     }
 	
 	@Test
@@ -90,8 +114,8 @@ class ExternalMovieServiceImplTest {
                 ArgumentMatchers.<Class<SearchMovieResponse>>any()))
              .thenReturn(searchMovieResponseEntity);
 
-        SearchMovieResponseDTO discoverMovieResponse = extMovieService.discoverMovie(withGenres,page);
-        assertEquals(discoverMovieResponse.getPage(), searchMovieResponseEntity.getBody().getPage());
+        SearchMovieResponseDTO discoverMovieResponseDto = extMovieService.discoverMovie(withGenres,page);
+        assertEquals(discoverMovieResponseDto.getPage(), searchMovieResponseEntity.getBody().getPage());
     }
 
 	@Test
