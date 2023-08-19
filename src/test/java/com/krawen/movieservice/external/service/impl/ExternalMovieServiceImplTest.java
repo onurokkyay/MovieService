@@ -1,6 +1,7 @@
 package com.krawen.movieservice.external.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
@@ -80,6 +82,19 @@ class ExternalMovieServiceImplTest {
 
         MovieDetailDTO retrieveMovieByIdResponseDto = extMovieService.retrieveMovieById(movieId);
         assertEquals(retrieveMovieByIdResponseDto.getTitle(), retrieveMovieByIdResponseEntity.getBody().getTitle());
+    }
+	
+	@Test
+    void testRetrieveMovieByIdMovieNotFoundException() throws MovieNotFoundException {
+    	
+        when(restTemplate.exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<MovieDetail>>any()))
+             .thenThrow(new HttpClientErrorException (HttpStatus.NOT_FOUND));
+
+        assertThrows(MovieNotFoundException.class, () -> extMovieService.retrieveMovieById(movieId));
     }
 	
 	@Test
