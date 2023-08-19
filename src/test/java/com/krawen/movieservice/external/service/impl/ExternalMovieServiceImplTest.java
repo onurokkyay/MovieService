@@ -10,14 +10,17 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
+import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
 import com.krawen.movieservice.external.service.dto.SearchPersonResponse;
+import com.krawen.movieservice.kafka.MovieKafkaProducer;
 import com.krawen.movieservice.properties.MovieServiceProperties;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +34,9 @@ class ExternalMovieServiceImplTest {
 
 	@Mock
 	MovieServiceProperties movieServiceProperties;
+	
+	@Mock
+	MovieKafkaProducer kafkaProducer;
 
 	ResponseEntity<SearchPersonResponse> searchPersonResponseEntity;
 	SearchPersonResponse searchPersonResponse;
@@ -40,7 +46,7 @@ class ExternalMovieServiceImplTest {
 	String timeWindow = "day";
 	int page = 1;
 	String withGenres="Action";
-	
+	String movieName="TestMovieName";
 	@BeforeEach
 	void setup() {
 		searchPersonResponse = new SearchPersonResponse();
@@ -51,6 +57,18 @@ class ExternalMovieServiceImplTest {
 		searchMovieResponse.setPage(1L);
 		searchMovieResponseEntity = new ResponseEntity<SearchMovieResponse>(searchMovieResponse, HttpStatus.OK);
 	}
+	
+	@Test
+    void testSearchMovieSuccess() {
+    	
+        when(restTemplate.exchange(
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<SearchMovieResponse>>any()))
+             .thenReturn(searchMovieResponseEntity);
+
+        SearchMovieResponseDTO searchMovieResponse = extMovieService.searchMovie(new SearchMovieRequest(movieName, false, page));
+        assertEquals(searchMovieResponse.getPage(), searchMovieResponseEntity.getBody().getPage());
+    }
 	
 	@Test
     void testRetrievePopularMoviesSuccess() {
