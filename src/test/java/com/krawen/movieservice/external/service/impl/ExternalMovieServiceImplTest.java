@@ -3,6 +3,7 @@ package com.krawen.movieservice.external.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import com.krawen.movieservice.dto.MovieDetailDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
+import com.krawen.movieservice.entity.BelongsToCollection;
 import com.krawen.movieservice.entity.Genre;
 import com.krawen.movieservice.entity.MovieDetail;
 import com.krawen.movieservice.entity.RetrieveGenresResponse;
@@ -64,6 +66,8 @@ class ExternalMovieServiceImplTest {
 	Long genreId = 1L;
 	String genreName = "Action";
 	Genre testGenre;
+	String testPath = "testPath";
+	BelongsToCollection belongsToCollection;
 
 	@BeforeEach
 	void setup() {
@@ -76,7 +80,7 @@ class ExternalMovieServiceImplTest {
 		searchMovieResponseEntity = new ResponseEntity<SearchMovieResponse>(searchMovieResponse, HttpStatus.OK);
 		retrieveMovieByIdResponse = new MovieDetail();
 		retrieveMovieByIdResponse.setTitle(movieName);
-		retrieveMovieByIdResponse.setBackdropPath("testPath");
+		retrieveMovieByIdResponse.setBackdropPath(testPath);
 		retrieveMovieByIdResponseEntity = new ResponseEntity<MovieDetail>(retrieveMovieByIdResponse, HttpStatus.OK);
 		retrieveGenresResponse = new RetrieveGenresResponse();
 		testGenre = new Genre();
@@ -96,9 +100,27 @@ class ExternalMovieServiceImplTest {
                 ArgumentMatchers.any(),
                 ArgumentMatchers.<Class<MovieDetail>>any()))
              .thenReturn(retrieveMovieByIdResponseEntity);
+        belongsToCollection= null;
+        MovieDetailDTO retrieveMovieByIdResponseDto = extMovieService.retrieveMovieById(movieId);
+        assertEquals(retrieveMovieByIdResponseDto.getTitle(), retrieveMovieByIdResponseEntity.getBody().getTitle());
+    }
+	
+	@Test
+    void testRetrieveMovieByIdSuccessBelongsToCollectionNotNull() throws MovieNotFoundException {
+		belongsToCollection = new BelongsToCollection();
+		belongsToCollection.setBackdropPath(testPath);
+		retrieveMovieByIdResponse.setBelongsToCollection(belongsToCollection);
+		
+        when(restTemplate.exchange(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<MovieDetail>>any()))
+             .thenReturn(retrieveMovieByIdResponseEntity);
 
         MovieDetailDTO retrieveMovieByIdResponseDto = extMovieService.retrieveMovieById(movieId);
         assertEquals(retrieveMovieByIdResponseDto.getTitle(), retrieveMovieByIdResponseEntity.getBody().getTitle());
+        assertTrue(retrieveMovieByIdResponseDto.getBelongsToCollection().getBackdropPath().startsWith(imagePath));
     }
 
 	@Test
