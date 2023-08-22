@@ -8,7 +8,15 @@ import lombok.Data;
 @Data
 public class SearchMovieResponseDTO {
     private Long page;
-    private final List<MovieDTO> movies = new ArrayList<MovieDTO>();;
+    private List<MovieDTO> movies;
     private Long totalPages;
     private Long totalResults;
+    
+	public List<MovieDTO> getMovies() {
+		if (movies == null) {
+			movies = new ArrayList<MovieDTO>();
+		}
+		return movies;
+	}
+
 }

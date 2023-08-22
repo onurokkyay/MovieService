@@ -149,8 +149,8 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 
 		ResponseEntity<SearchPersonResponse> response = restTemplate.exchange(requestEntity, SearchPersonResponse.class);
 
-		SearchPersonResponseDTO movies = extMovieServiceMapper.mapToSearchPeopleResponseDTO(response.getBody());
-		return movies;
+		SearchPersonResponseDTO searchPersonResponseDto = extMovieServiceMapper.mapToSearchPeopleResponseDTO(response.getBody());
+		return searchPersonResponseDto;
 
 	}
 
