@@ -3,6 +3,7 @@ package com.krawen.movieservice.external.service;
 import java.util.List;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.RetrievePersonDetailResponseDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
@@ -15,4 +16,5 @@ public interface IExternalMovieService {
 	List<Genre> retrieveGenres();
 	SearchMovieResponseDTO discoverMovie(String withGenres, int page);
 	SearchPersonResponseDTO retrieveTrendingPeople(String timeWindow);
+	RetrievePersonDetailResponseDTO retrievePersonDetailById(int personId);
 }
