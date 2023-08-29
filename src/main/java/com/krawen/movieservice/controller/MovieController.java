@@ -119,7 +119,12 @@ public class MovieController {
 	}
 	
 	@GetMapping("/movieservice/person/{personId}")
-	public RetrievePersonDetailResponseDTO retrieveTrendingPeople( 
+	@Operation(summary = "Retrieve person detail by ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of person detail"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    })
+	public RetrievePersonDetailResponseDTO retrievePersonDetailById( 
     @PathVariable int personId) {
 		return movieService.retrievePersonDetailById(personId);
 	}
