@@ -21,6 +21,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.RetrievePersonDetailResponseDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.BelongsToCollection;
@@ -30,6 +31,7 @@ import com.krawen.movieservice.entity.RetrieveGenresResponse;
 import com.krawen.movieservice.exception.MovieNotFoundException;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
+import com.krawen.movieservice.external.service.dto.RetrievePersonDetailResponse;
 import com.krawen.movieservice.external.service.dto.SearchPersonResponse;
 import com.krawen.movieservice.kafka.MovieKafkaProducer;
 import com.krawen.movieservice.properties.MovieServiceProperties;
@@ -68,6 +70,10 @@ class ExternalMovieServiceImplTest {
 	Genre testGenre;
 	String testPath = "testPath";
 	BelongsToCollection belongsToCollection;
+	ResponseEntity<RetrievePersonDetailResponse> retrievePersonDetailByIdResponseEntity;
+	RetrievePersonDetailResponse retrievePersonDetailByIdResponse;
+	String testName ="testName";
+	int personId=1;
 
 	@BeforeEach
 	void setup() {
@@ -89,6 +95,9 @@ class ExternalMovieServiceImplTest {
 		retrieveGenresResponse.setGenres(List.of(testGenre));
 		retrieveGenresResponseEntity = new ResponseEntity<RetrieveGenresResponse>(retrieveGenresResponse,
 				HttpStatus.OK);
+		retrievePersonDetailByIdResponse = new RetrievePersonDetailResponse();
+		retrievePersonDetailByIdResponse.setName(testName);
+		retrievePersonDetailByIdResponseEntity = new ResponseEntity<RetrievePersonDetailResponse>(retrievePersonDetailByIdResponse, HttpStatus.OK);
 	}
 
 	@Test
@@ -196,6 +205,18 @@ class ExternalMovieServiceImplTest {
 
         SearchPersonResponseDTO searchPersonDto = extMovieService.retrieveTrendingPeople(timeWindow);
         assertEquals(searchPersonDto.getPage(), searchPersonResponseEntity.getBody().getPage());
+    }
+	
+	@Test
+    void testRetrievePersonDetailByIdSuccess() {
+    	
+        when(restTemplate.exchange(
+                ArgumentMatchers.any(),
+                ArgumentMatchers.<Class<RetrievePersonDetailResponse>>any()))
+             .thenReturn(retrievePersonDetailByIdResponseEntity);
+
+        RetrievePersonDetailResponseDTO retrievePersonDetailByIdResponse = extMovieService.retrievePersonDetailById(personId);
+        assertEquals(retrievePersonDetailByIdResponse.getName(), retrievePersonDetailByIdResponseEntity.getBody().getName());
     }
 
 }
