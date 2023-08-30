@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.RetrievePersonDetailResponseDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
@@ -115,5 +116,16 @@ public class MovieController {
 	@Parameter(description = "Time window for retrieveTrendingPeople. Possible values: 'day', 'week'", schema = @Schema(allowableValues = {"day", "week"}))
     @RequestParam(defaultValue = "day") String timeWindow) {
 		return movieService.retrieveTrendingPeople(timeWindow);
+	}
+	
+	@GetMapping("/movieservice/person/{personId}")
+	@Operation(summary = "Retrieve person detail by ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of person detail"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    })
+	public RetrievePersonDetailResponseDTO retrievePersonDetailById( 
+    @PathVariable int personId) {
+		return movieService.retrievePersonDetailById(personId);
 	}
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.RetrievePersonDetailResponseDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
@@ -48,6 +49,11 @@ public class MovieServiceImpl implements IMovieService {
 	@Override
 	public SearchPersonResponseDTO retrieveTrendingPeople(String timeWindow) {
 		return extMovieService.retrieveTrendingPeople(timeWindow);
+	}
+	
+	@Override
+	public RetrievePersonDetailResponseDTO retrievePersonDetailById(int personId) {
+		return extMovieService.retrievePersonDetailById(personId);
 	}
 
 }

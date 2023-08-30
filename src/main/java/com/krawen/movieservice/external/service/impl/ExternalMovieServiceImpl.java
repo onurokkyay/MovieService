@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.RetrievePersonDetailResponseDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.Genre;
@@ -27,6 +28,7 @@ import com.krawen.movieservice.external.mapper.ExternalMovieServiceMapper;
 import com.krawen.movieservice.external.service.IExternalMovieService;
 import com.krawen.movieservice.external.service.SearchMovieRequest;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
+import com.krawen.movieservice.external.service.dto.RetrievePersonDetailResponse;
 import com.krawen.movieservice.external.service.dto.SearchPersonResponse;
 import com.krawen.movieservice.kafka.MovieKafkaProducer;
 import com.krawen.movieservice.properties.MovieServiceProperties;
@@ -150,6 +152,23 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ResponseEntity<SearchPersonResponse> response = restTemplate.exchange(requestEntity, SearchPersonResponse.class);
 
 		SearchPersonResponseDTO searchPersonResponseDto = extMovieServiceMapper.mapToSearchPeopleResponseDTO(response.getBody());
+		return searchPersonResponseDto;
+
+	}
+	
+	@Override
+	public RetrievePersonDetailResponseDTO retrievePersonDetailById(int personId) {
+		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
+		HttpHeaders headers = createHttpHeaders();
+
+		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/person/"+personId).build()
+				.toUri();
+	
+		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
+
+		ResponseEntity<RetrievePersonDetailResponse> response = restTemplate.exchange(requestEntity, RetrievePersonDetailResponse.class);
+
+		RetrievePersonDetailResponseDTO searchPersonResponseDto = extMovieServiceMapper.mapToRetrievePersonDetailResponseDTO(response.getBody());
 		return searchPersonResponseDto;
 
 	}

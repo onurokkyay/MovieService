@@ -5,10 +5,12 @@ import java.util.Objects;
 import org.modelmapper.ModelMapper;
 
 import com.krawen.movieservice.dto.MovieDetailDTO;
+import com.krawen.movieservice.dto.RetrievePersonDetailResponseDTO;
 import com.krawen.movieservice.dto.SearchMovieResponseDTO;
 import com.krawen.movieservice.dto.SearchPersonResponseDTO;
 import com.krawen.movieservice.entity.MovieDetail;
 import com.krawen.movieservice.external.service.SearchMovieResponse;
+import com.krawen.movieservice.external.service.dto.RetrievePersonDetailResponse;
 import com.krawen.movieservice.external.service.dto.SearchPersonResponse;
 
 import io.micrometer.common.util.StringUtils;
@@ -57,6 +59,13 @@ public class ExternalMovieServiceMapper {
 			});
 		});
 		return searchPersonResponseDto;
+	}
+	
+	public RetrievePersonDetailResponseDTO mapToRetrievePersonDetailResponseDTO(RetrievePersonDetailResponse response) {
+		ModelMapper modelMapper = new ModelMapper();
+		RetrievePersonDetailResponseDTO retrievePersonDetailResponseDto = modelMapper.map(response, RetrievePersonDetailResponseDTO.class);
+		retrievePersonDetailResponseDto.setProfilePath(addImagePath(retrievePersonDetailResponseDto.getProfilePath()));
+		return retrievePersonDetailResponseDto;
 	}
 
 	private String addImagePath(String path) {
