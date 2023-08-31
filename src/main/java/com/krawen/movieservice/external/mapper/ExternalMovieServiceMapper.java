@@ -24,16 +24,16 @@ public class ExternalMovieServiceMapper {
 
 	public MovieDetailDTO mapToMovieDetailDTO(MovieDetail movie) {
 		ModelMapper modelMapper = new ModelMapper();
-		MovieDetailDTO MovieDetailDTO = modelMapper.map(movie, MovieDetailDTO.class);
-		if (Objects.nonNull(MovieDetailDTO.getBelongsToCollection())) {
-			MovieDetailDTO.getBelongsToCollection()
-					.setBackdropPath(addImagePath(MovieDetailDTO.getBelongsToCollection().getBackdropPath()));
-			MovieDetailDTO.getBelongsToCollection()
-					.setPosterPath(addImagePath(MovieDetailDTO.getBelongsToCollection().getPosterPath()));
+		MovieDetailDTO movieDetailDto = modelMapper.map(movie, MovieDetailDTO.class);
+		if (Objects.nonNull(movieDetailDto.getBelongsToCollection())) {
+			movieDetailDto.getBelongsToCollection()
+					.setBackdropPath(addImagePath(movieDetailDto.getBelongsToCollection().getBackdropPath()));
+			movieDetailDto.getBelongsToCollection()
+					.setPosterPath(addImagePath(movieDetailDto.getBelongsToCollection().getPosterPath()));
 		}
-		MovieDetailDTO.setBackdropPath(addImagePath(movie.getBackdropPath()));
-		MovieDetailDTO.setPosterPath(addImagePath(movie.getPosterPath()));
-		return MovieDetailDTO;
+		movieDetailDto.setBackdropPath(addImagePath(movie.getBackdropPath()));
+		movieDetailDto.setPosterPath(addImagePath(movie.getPosterPath()));
+		return movieDetailDto;
 	}
 
 	public SearchMovieResponseDTO mapToSearchMovieByNameResponseDTO(SearchMovieResponse response) {

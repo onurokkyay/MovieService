@@ -1,12 +1,14 @@
 package com.krawen.movieservice.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.krawen.movieservice.exception.MovieNotFoundException;
+
 import lombok.Data;
 
 @Data
