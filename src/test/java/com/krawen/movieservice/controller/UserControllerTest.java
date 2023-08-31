@@ -52,31 +52,31 @@ class UserControllerTest {
 	}
 
 	@Test
-	public void testRetrieveUserByUserNameSuccess() throws UserNotFoundException {
+	void testRetrieveUserByUserNameSuccess() throws UserNotFoundException {
 		when(userService.retrieveUserByUserName(any(String.class))).thenReturn(userDto);
 		assertEquals(testUserName, userController.retrieveUserByUserName(testUserName).getUserName());
 	}
 
 	@Test
-	public void testRetrieveUserByUserNameUserNotFoundException() throws UserNotFoundException {
+	void testRetrieveUserByUserNameUserNotFoundException() throws UserNotFoundException {
 		when(userService.retrieveUserByUserName(any(String.class))).thenThrow(UserNotFoundException.class);
 		assertThrows(UserNotFoundException.class, () -> userController.retrieveUserByUserName(testUserName));
 	}
 
 	@Test
-	public void testCreateUserSuccess() throws UserNameExistException {
+	void testCreateUserSuccess() throws UserNameExistException {
 		when(userService.createUser(userDto)).thenReturn(user);
 		assertEquals(HttpStatus.OK.value(), userController.createUser(userDto).getStatusCode().value());
 	}
 
 	@Test
-	public void testCreateUserUserNameExistException() throws UserNameExistException {
+	void testCreateUserUserNameExistException() throws UserNameExistException {
 		when(userService.createUser(userDto)).thenThrow(UserNameExistException.class);
 		assertThrows(UserNameExistException.class, ()-> userController.createUser(userDto));
 	}
 
 	@Test
-	public void testAddWatchedMovieSuccess()
+	void testAddWatchedMovieSuccess()
 			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 		doNothing().when(userService).addWatchedMovie(testUserName, movieId);
 		assertEquals(HttpStatus.OK.value(),
@@ -84,21 +84,21 @@ class UserControllerTest {
 	}
 
 	@Test
-	public void testAddWatchedMovieMovieNotFoundException()
+	void testAddWatchedMovieMovieNotFoundException()
 			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 		doThrow(new MovieNotFoundException(movieId)).when(userService).addWatchedMovie(testUserName, movieId);
 		assertThrows(MovieNotFoundException.class, () -> userController.addWatchedMovie(testUserName, addMovieDto));
 	}
 
 	@Test
-	public void testAddWatchedMovieUserNotFoundException()
+	void testAddWatchedMovieUserNotFoundException()
 			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 		doThrow(new UserNotFoundException(testUserName)).when(userService).addWatchedMovie(testUserName, movieId);
 		assertThrows(UserNotFoundException.class, () -> userController.addWatchedMovie(testUserName, addMovieDto));
 	}
 	
 	@Test
-	public void testAddFavMovieSuccess()
+	void testAddFavMovieSuccess()
 			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 		doNothing().when(userService).addFavMovie(testUserName, movieId);
 		assertEquals(HttpStatus.OK.value(),
@@ -106,53 +106,53 @@ class UserControllerTest {
 	}
 
 	@Test
-	public void testAddFavMovieMovieNotFoundException()
+	void testAddFavMovieMovieNotFoundException()
 			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 		doThrow(new MovieNotFoundException(movieId)).when(userService).addFavMovie(testUserName, movieId);
 		assertThrows(MovieNotFoundException.class, () -> userController.addFavMovie(testUserName, addMovieDto));
 	}
 
 	@Test
-	public void testAddFavMovieUserNotFoundException()
+	void testAddFavMovieUserNotFoundException()
 			throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
 		doThrow(new UserNotFoundException(testUserName)).when(userService).addFavMovie(testUserName, movieId);
 		assertThrows(UserNotFoundException.class, () -> userController.addFavMovie(testUserName, addMovieDto));
 	}
 	
 	@Test
-	public void testRemoveMovieFromWatchedMovies() throws UserNotFoundException, MovieNotFoundException {
+	void testRemoveMovieFromWatchedMovies() throws UserNotFoundException, MovieNotFoundException {
 		doNothing().when(userService).removeWatchedMovie(testUserName, movieId);
 		assertEquals(HttpStatus.OK.value(),
 				userController.removeMovieFromWatchedMovies(testUserName, movieId).getStatusCode().value());		
 	}
 	
 	@Test
-	public void testRemoveMovieFromWatchedMoviesUserNotFoundException() throws UserNotFoundException, MovieNotFoundException {
+	void testRemoveMovieFromWatchedMoviesUserNotFoundException() throws UserNotFoundException, MovieNotFoundException {
 		doThrow(new UserNotFoundException(testUserName)).when(userService).removeWatchedMovie(testUserName, movieId);
 		assertThrows(UserNotFoundException.class, () -> userController.removeMovieFromWatchedMovies(testUserName, movieId));
 	}
 	
 	@Test
-	public void testRemoveMovieFromWatchedMoviesMovieNotFoundException() throws UserNotFoundException, MovieNotFoundException {
+	void testRemoveMovieFromWatchedMoviesMovieNotFoundException() throws UserNotFoundException, MovieNotFoundException {
 		doThrow(new MovieNotFoundException(movieId)).when(userService).removeWatchedMovie(testUserName, movieId);
 		assertThrows(MovieNotFoundException.class, () -> userController.removeMovieFromWatchedMovies(testUserName, movieId));
 	}
 	
 	@Test
-	public void testRemoveMovieFromFavMovies() throws UserNotFoundException, MovieNotFoundException {
+	void testRemoveMovieFromFavMovies() throws UserNotFoundException, MovieNotFoundException {
 		doNothing().when(userService).removeFavMovie(testUserName, movieId);
 		assertEquals(HttpStatus.OK.value(),
 				userController.removeMovieFromFavMovies(testUserName, movieId).getStatusCode().value());		
 	}
 	
 	@Test
-	public void testRemoveMovieFromFavMoviesUserNotFoundException() throws UserNotFoundException, MovieNotFoundException {
+	void testRemoveMovieFromFavMoviesUserNotFoundException() throws UserNotFoundException, MovieNotFoundException {
 		doThrow(new UserNotFoundException(testUserName)).when(userService).removeFavMovie(testUserName, movieId);
 		assertThrows(UserNotFoundException.class, () -> userController.removeMovieFromFavMovies(testUserName, movieId));
 	}
 	
 	@Test
-	public void testRemoveMovieFromFavMoviesMovieNotFoundException() throws UserNotFoundException, MovieNotFoundException {
+	void testRemoveMovieFromFavMoviesMovieNotFoundException() throws UserNotFoundException, MovieNotFoundException {
 		doThrow(new MovieNotFoundException(movieId)).when(userService).removeFavMovie(testUserName, movieId);
 		assertThrows(MovieNotFoundException.class, () -> userController.removeMovieFromFavMovies(testUserName, movieId));
 	}
