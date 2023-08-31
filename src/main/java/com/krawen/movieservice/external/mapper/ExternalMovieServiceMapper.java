@@ -20,7 +20,7 @@ public class ExternalMovieServiceMapper {
 	// @Autowired
 	// private ModelMapper modelMapper;
 
-	private final String imagePath = "https://image.tmdb.org/t/p/w500/";
+	private static final String IMAGE_PATH = "https://image.tmdb.org/t/p/w500/";
 
 	public MovieDetailDTO mapToMovieDetailDTO(MovieDetail movie) {
 		ModelMapper modelMapper = new ModelMapper();
@@ -72,7 +72,7 @@ public class ExternalMovieServiceMapper {
 		if (Objects.isNull(path) && StringUtils.isEmpty(path)) {
 			return path;
 		} else {
-			return imagePath.concat(path);
+			return IMAGE_PATH.concat(path);
 		}
 
 	}

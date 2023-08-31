@@ -45,7 +45,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	@Autowired
 	MovieServiceProperties movieServiceProperties;
 
-	private final String baseUrl = "https://api.themoviedb.org/3";
+	private static final String BASE_URL = "https://api.themoviedb.org/3";
 
 	HttpHeaders createHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();
@@ -62,7 +62,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 		ResponseEntity<MovieDetail> response = null;
 		try {
-			response = restTemplate.exchange(baseUrl + "/movie/" + movieId, HttpMethod.GET, entity, MovieDetail.class);
+			response = restTemplate.exchange(BASE_URL + "/movie/" + movieId, HttpMethod.GET, entity, MovieDetail.class);
 		} catch (HttpClientErrorException e) {
 			if (HttpStatus.NOT_FOUND.equals(e.getStatusCode())) {
 				throw new MovieNotFoundException(movieId);
@@ -78,7 +78,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		kafkaProducer.sendMessage(String.format("Movie searched by name: %s ", request.getQuery()));
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/search/movie")
+		URI uri = UriComponentsBuilder.fromHttpUrl(BASE_URL).path("/search/movie")
 				.queryParam("query", request.getQuery()).queryParam("page", request.getPage())
 				.queryParam("include_adult", request.isIncludeAdult()).build().toUri();
 
@@ -96,7 +96,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/movie/popular").queryParam("page", page).build()
+		URI uri = UriComponentsBuilder.fromHttpUrl(BASE_URL).path("/movie/popular").queryParam("page", page).build()
 				.toUri();
 
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
@@ -112,7 +112,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 	public List<Genre> retrieveGenres() {
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/genre/movie/list").build().toUri();
+		URI uri = UriComponentsBuilder.fromHttpUrl(BASE_URL).path("/genre/movie/list").build().toUri();
 
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
 
@@ -127,7 +127,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/discover/movie")
+		URI uri = UriComponentsBuilder.fromHttpUrl(BASE_URL).path("/discover/movie")
 				.queryParam("with_genres", withGenres).queryParam("page", page).build().toUri();
 
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
@@ -144,7 +144,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/trending/person/"+timeWindow).build()
+		URI uri = UriComponentsBuilder.fromHttpUrl(BASE_URL).path("/trending/person/"+timeWindow).build()
 				.toUri();
 	
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
@@ -161,7 +161,7 @@ public class ExternalMovieServiceImpl implements IExternalMovieService {
 		ExternalMovieServiceMapper extMovieServiceMapper = new ExternalMovieServiceMapper();
 		HttpHeaders headers = createHttpHeaders();
 
-		URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).path("/person/"+personId).build()
+		URI uri = UriComponentsBuilder.fromHttpUrl(BASE_URL).path("/person/"+personId).build()
 				.toUri();
 	
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);

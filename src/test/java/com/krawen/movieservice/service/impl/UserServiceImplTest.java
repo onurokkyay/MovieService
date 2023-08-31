@@ -34,7 +34,7 @@ class UserServiceImplTest {
     private MovieServiceImpl movieService;
     private MovieDetailDTO movieDetailDto;
     private MovieDetail movieDetail;
-	private final String testUsername = "test";
+	private static final String TEST_USERNAME = "test";
 	private int movieId=1;
     UserDTO userDTO;
     User savedUser;
@@ -46,12 +46,12 @@ class UserServiceImplTest {
         userRepo = mock(UserRepository.class);
         userKafkaProducer = mock(UserKafkaProducer.class);
         userDTO = new UserDTO();
-        userDTO.setUserName(testUsername);
+        userDTO.setUserName(TEST_USERNAME);
         savedUser = new User();
-        savedUser.setUserName(testUsername);
+        savedUser.setUserName(TEST_USERNAME);
         savedUser.setId("1");
         user = new User();
-        user.setUserName(testUsername);
+        user.setUserName(TEST_USERNAME);
      
         movieDetailDto = new MovieDetailDTO();
         movieDetailDto.setId(movieId);
@@ -95,16 +95,16 @@ class UserServiceImplTest {
 		 	@Test
 		    public void testRetrieveUserSuccess() throws UserNotFoundException {
 
-		        when(userRepo.existsByUserName(testUsername)).thenReturn(true);
+		        when(userRepo.existsByUserName(TEST_USERNAME)).thenReturn(true);
 
 		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
 
-		        UserDTO userDTO = userService.retrieveUserByUserName(testUsername);
+		        UserDTO userDTO = userService.retrieveUserByUserName(TEST_USERNAME);
 
 		        assertNotNull(userDTO);
 		        assertEquals(userDTO.getUserName(), user.getUserName());
 		        verify(userRepo, times(1)).existsByUserName(userDTO.getUserName());
-		        verify(userRepo, times(1)).findByUserName(testUsername);
+		        verify(userRepo, times(1)).findByUserName(TEST_USERNAME);
 
 		    }
 
@@ -128,7 +128,7 @@ class UserServiceImplTest {
 		        
 		        when(movieService.retrieveMovieById(movieId)).thenReturn(movieDetailDto);
 		        
-		        userService.addWatchedMovie(testUsername, movieId);
+		        userService.addWatchedMovie(TEST_USERNAME, movieId);
 		        
 		        assertNotNull(user.getWatchedMovies().stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null));
 
@@ -142,7 +142,7 @@ class UserServiceImplTest {
 		        
 		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
 
-		        assertThrows(MovieAlreadyExistException.class, () ->  userService.addWatchedMovie(testUsername, movieId));
+		        assertThrows(MovieAlreadyExistException.class, () ->  userService.addWatchedMovie(TEST_USERNAME, movieId));
 
 		    }
 		    
@@ -155,7 +155,7 @@ class UserServiceImplTest {
 		        
 		        when(movieService.retrieveMovieById(movieId)).thenReturn(movieDetailDto);
 		        
-		        userService.addFavMovie(testUsername, movieId);
+		        userService.addFavMovie(TEST_USERNAME, movieId);
 		        
 		        assertNotNull(user.getFavMovies().stream().filter(movie -> movie.getId() == movieId).findFirst().orElse(null));
 
@@ -169,7 +169,7 @@ class UserServiceImplTest {
 		        
 		        when(userRepo.findByUserName(any(String.class))).thenReturn(user);
 
-		        assertThrows(MovieAlreadyExistException.class, () ->  userService.addFavMovie(testUsername, movieId));
+		        assertThrows(MovieAlreadyExistException.class, () ->  userService.addFavMovie(TEST_USERNAME, movieId));
 
 		    }
 		    
