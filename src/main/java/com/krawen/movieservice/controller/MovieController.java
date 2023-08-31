@@ -29,7 +29,7 @@ public class MovieController {
 	@Autowired
 	IMovieService movieService;
 
-	@GetMapping("/movieservice/movies/{movieId}")
+	@GetMapping("/movies/{movieId}")
 	@Operation(summary = "Retrieve a movie by its ID", description = "Returns the movie details for the given movie ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successful retrieval of movie details"),
 			@ApiResponse(responseCode = "404", description = "Movie not found") })
@@ -37,7 +37,7 @@ public class MovieController {
 		return movieService.retrieveMovieById(movieId);
 	}
 
-	@GetMapping("/movieservice/movies")
+	@GetMapping("/movies")
 	@Operation(summary = "Search movies", description = "Searches movies based on the provided criteria")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of movie search results"),
@@ -48,7 +48,7 @@ public class MovieController {
 		return movieService.searchMovie(searchMovieRequest);
 	}
 
-	@GetMapping("/movieservice/movies/popular")
+	@GetMapping("/movies/popular")
 	@Operation(summary = "Retrieve popular movies", description = "Retrieve popular pages with page param")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of retrieve popular movies results"),
@@ -57,7 +57,7 @@ public class MovieController {
 		return movieService.retrievePopularMovies(page);
 	}
 
-	@GetMapping("/movieservice/movies/genres")
+	@GetMapping("/movies/genres")
 	@Operation(summary = "Retrieve genres", description = "Retrieve genres for movies")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of genres results"), })
@@ -85,7 +85,7 @@ public class MovieController {
 	 *                   discovery.
 	 * @return A SearchMovieResponseDTO object containing the discovered movies.
 	 */
-	@GetMapping("/movieservice/movies/discover")
+	@GetMapping("/movies/discover")
 	@Operation(summary = "Discover movies", description = "Discover movies based on the provided criteria."
 			+ "	  AND/OR Logic: Also note that a number of filters support being comma (,) or\r\n"
 			+ "	  pipe (|) separated. Comma's are treated like an AND query while pipe's are\r\n"
@@ -106,7 +106,7 @@ public class MovieController {
 		return movieService.discoverMovie(withGenres,page);
 	}
 	
-	@GetMapping("/movieservice/person/trending")
+	@GetMapping("/person/trending")
 	@Operation(summary = "Retrieves a list of trending people based on the specified time window.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of trending people"),
@@ -118,7 +118,7 @@ public class MovieController {
 		return movieService.retrieveTrendingPeople(timeWindow);
 	}
 	
-	@GetMapping("/movieservice/person/{personId}")
+	@GetMapping("/person/{personId}")
 	@Operation(summary = "Retrieve person detail by ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of person detail"),
