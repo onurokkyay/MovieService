@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,12 +25,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
+@RequestMapping("/movies")
 public class MovieController {
 
 	@Autowired
 	IMovieService movieService;
 
-	@GetMapping("/movies/{movieId}")
+	@GetMapping("/{movieId}")
 	@Operation(summary = "Retrieve a movie by its ID", description = "Returns the movie details for the given movie ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successful retrieval of movie details"),
 			@ApiResponse(responseCode = "404", description = "Movie not found") })
@@ -37,7 +39,7 @@ public class MovieController {
 		return movieService.retrieveMovieById(movieId);
 	}
 
-	@GetMapping("/movies")
+	@GetMapping("")
 	@Operation(summary = "Search movies", description = "Searches movies based on the provided criteria")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of movie search results"),
@@ -48,7 +50,7 @@ public class MovieController {
 		return movieService.searchMovie(searchMovieRequest);
 	}
 
-	@GetMapping("/movies/popular")
+	@GetMapping("/popular")
 	@Operation(summary = "Retrieve popular movies", description = "Retrieve popular pages with page param")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of retrieve popular movies results"),
@@ -57,7 +59,7 @@ public class MovieController {
 		return movieService.retrievePopularMovies(page);
 	}
 
-	@GetMapping("/movies/genres")
+	@GetMapping("/genres")
 	@Operation(summary = "Retrieve genres", description = "Retrieve genres for movies")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful retrieval of genres results"), })
@@ -85,7 +87,7 @@ public class MovieController {
 	 *                   discovery.
 	 * @return A SearchMovieResponseDTO object containing the discovered movies.
 	 */
-	@GetMapping("/movies/discover")
+	@GetMapping("/discover")
 	@Operation(summary = "Discover movies", description = "Discover movies based on the provided criteria."
 			+ "	  AND/OR Logic: Also note that a number of filters support being comma (,) or\r\n"
 			+ "	  pipe (|) separated. Comma's are treated like an AND query while pipe's are\r\n"
