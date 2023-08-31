@@ -70,7 +70,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
     @PutMapping("/{userName}/movies/watched")
-    public ResponseEntity<?> addWatchedMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+    public ResponseEntity<String> addWatchedMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
     	userService.addWatchedMovie(userName,movie.getId());
     	return ResponseEntity.ok("Watched movie added");
     }
@@ -91,7 +91,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
     @PutMapping("/{userName}/movies/favorites")
-    public ResponseEntity<?> addFavMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
+    public ResponseEntity<String> addFavMovie(@PathVariable String userName, @RequestBody AddMovieDTO movie) throws UserNotFoundException, MovieNotFoundException, MovieAlreadyExistException {
     	userService.addFavMovie(userName,movie.getId());
     	return ResponseEntity.ok("Fav movie added");
     }
@@ -111,7 +111,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
 	@DeleteMapping("/{userName}/movies/watched/{id}")
-	public ResponseEntity<?> removeMovieFromWatchedMovies(
+	public ResponseEntity<String> removeMovieFromWatchedMovies(
 	        @PathVariable("userName") String userName,
 	        @PathVariable("id") int id) throws UserNotFoundException, MovieNotFoundException {
 	    userService.removeWatchedMovie(userName, id);
@@ -133,7 +133,7 @@ public class UserController {
 	        @ApiResponse(responseCode = "404", description = "User not found")
 	})
     @DeleteMapping("/{userName}/movies/favorites/{id}")
-    public ResponseEntity<?>  removeMovieFromFavMovies(
+    public ResponseEntity<String>  removeMovieFromFavMovies(
             @PathVariable("userName") String userName,
             @PathVariable("id") int id) throws UserNotFoundException, MovieNotFoundException {
         userService.removeFavMovie(userName, id);
