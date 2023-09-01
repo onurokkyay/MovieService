@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserKafkaProducer {
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(UserKafkaProducer.class);
+	private static final  Logger LOGGER = LoggerFactory.getLogger(UserKafkaProducer.class);
 	
 	@Autowired
 	private KafkaTemplate<String, UserDTO> kafkaTemplate;

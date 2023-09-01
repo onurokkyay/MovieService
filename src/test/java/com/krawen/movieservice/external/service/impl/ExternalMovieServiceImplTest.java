@@ -57,7 +57,7 @@ class ExternalMovieServiceImplTest {
 	SearchMovieResponse searchMovieResponse;
 	ResponseEntity<MovieDetail> retrieveMovieByIdResponseEntity;
 	MovieDetail retrieveMovieByIdResponse;
-	final static String IMAGE_PATH = "https://image.tmdb.org/t/p/w500/";
+	static final  String IMAGE_PATH = "https://image.tmdb.org/t/p/w500/";
 	ResponseEntity<RetrieveGenresResponse> retrieveGenresResponseEntity;
 	RetrieveGenresResponse retrieveGenresResponse;
 	String timeWindow = "day";
