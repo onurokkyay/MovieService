@@ -2,7 +2,7 @@
 Restful Movie Service with Spring Boot and MongoDB. Save the movies you watched and your favorites.
 
 ## Swagger UI
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8080/movieservice/swagger-ui/index.html#/
 
 ## Kafka
 Run the command prompt in the C:\Kafka folder and run the following commands in order
