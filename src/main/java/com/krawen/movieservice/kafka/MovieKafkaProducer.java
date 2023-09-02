@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MovieKafkaProducer {
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(MovieKafkaProducer.class);
+	private static final  Logger LOGGER = LoggerFactory.getLogger(MovieKafkaProducer.class);
 	
 	private KafkaTemplate<String, String> kafkaTemplate;
 

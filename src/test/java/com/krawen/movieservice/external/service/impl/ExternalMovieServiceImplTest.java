@@ -57,7 +57,7 @@ class ExternalMovieServiceImplTest {
 	SearchMovieResponse searchMovieResponse;
 	ResponseEntity<MovieDetail> retrieveMovieByIdResponseEntity;
 	MovieDetail retrieveMovieByIdResponse;
-	final String imagePath = "https://image.tmdb.org/t/p/w500/";
+	static final  String IMAGE_PATH = "https://image.tmdb.org/t/p/w500/";
 	ResponseEntity<RetrieveGenresResponse> retrieveGenresResponseEntity;
 	RetrieveGenresResponse retrieveGenresResponse;
 	String timeWindow = "day";
@@ -129,7 +129,7 @@ class ExternalMovieServiceImplTest {
 
         MovieDetailDTO retrieveMovieByIdResponseDto = extMovieService.retrieveMovieById(movieId);
         assertEquals(retrieveMovieByIdResponseDto.getTitle(), retrieveMovieByIdResponseEntity.getBody().getTitle());
-        assertTrue(retrieveMovieByIdResponseDto.getBelongsToCollection().getBackdropPath().startsWith(imagePath));
+        assertTrue(retrieveMovieByIdResponseDto.getBelongsToCollection().getBackdropPath().startsWith(IMAGE_PATH));
     }
 
 	@Test

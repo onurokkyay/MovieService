@@ -20,20 +20,20 @@ public class ExternalMovieServiceMapper {
 	// @Autowired
 	// private ModelMapper modelMapper;
 
-	private final String imagePath = "https://image.tmdb.org/t/p/w500/";
+	private static final String IMAGE_PATH = "https://image.tmdb.org/t/p/w500/";
 
 	public MovieDetailDTO mapToMovieDetailDTO(MovieDetail movie) {
 		ModelMapper modelMapper = new ModelMapper();
-		MovieDetailDTO MovieDetailDTO = modelMapper.map(movie, MovieDetailDTO.class);
-		if (Objects.nonNull(MovieDetailDTO.getBelongsToCollection())) {
-			MovieDetailDTO.getBelongsToCollection()
-					.setBackdropPath(addImagePath(MovieDetailDTO.getBelongsToCollection().getBackdropPath()));
-			MovieDetailDTO.getBelongsToCollection()
-					.setPosterPath(addImagePath(MovieDetailDTO.getBelongsToCollection().getPosterPath()));
+		MovieDetailDTO movieDetailDto = modelMapper.map(movie, MovieDetailDTO.class);
+		if (Objects.nonNull(movieDetailDto.getBelongsToCollection())) {
+			movieDetailDto.getBelongsToCollection()
+					.setBackdropPath(addImagePath(movieDetailDto.getBelongsToCollection().getBackdropPath()));
+			movieDetailDto.getBelongsToCollection()
+					.setPosterPath(addImagePath(movieDetailDto.getBelongsToCollection().getPosterPath()));
 		}
-		MovieDetailDTO.setBackdropPath(addImagePath(movie.getBackdropPath()));
-		MovieDetailDTO.setPosterPath(addImagePath(movie.getPosterPath()));
-		return MovieDetailDTO;
+		movieDetailDto.setBackdropPath(addImagePath(movie.getBackdropPath()));
+		movieDetailDto.setPosterPath(addImagePath(movie.getPosterPath()));
+		return movieDetailDto;
 	}
 
 	public SearchMovieResponseDTO mapToSearchMovieByNameResponseDTO(SearchMovieResponse response) {
@@ -72,7 +72,7 @@ public class ExternalMovieServiceMapper {
 		if (Objects.isNull(path) && StringUtils.isEmpty(path)) {
 			return path;
 		} else {
-			return imagePath.concat(path);
+			return IMAGE_PATH.concat(path);
 		}
 
 	}
